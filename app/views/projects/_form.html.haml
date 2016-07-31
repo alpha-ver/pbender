@@ -1,0 +1,22 @@
+= form_for @project do |f|
+  - if @project.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@project.errors.count, "error")} prohibited this project from being saved:"
+      %ul
+        - @project.errors.full_messages.each do |msg|
+          %li= msg
+          
+  .field
+    .input-group.input-group-lg
+      %span#sizing-addon1.input-group-addon Project name
+      = f.text_field :name, :aria        => {:describedby => "sizing-addon1"}, 
+                            :placeholder => "example: my site", 
+                            :class       => "form-control"
+  .field
+    .input-group.input-group-lg 
+      %span#sizing-addon1.input-group-addon URL
+      = f.text_field :url, :aria        => {:describedby => "sizing-addon1"}, 
+                            :placeholder => "example: http://www.google.ru", 
+                            :class       => "form-control"
+  .actions
+    = f.submit 'Save'
