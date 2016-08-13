@@ -35,7 +35,13 @@ gem "haml"
 gem "haml-rails"
 gem "mechanize"
 gem "devise"
-gem "twitter-bootstrap-rails"
+gem 'bootstrap-glyphicons'
+gem 'bootstrap-sass', '~> 3.3.6'
+gem 'rouge'
+gem "validate_url"
+gem 'devise-bootstrap-views'
+gem 'active_link_to'
+gem 'colorize'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

@@ -1,0 +1,164 @@
+%h1.title_current_url
+  %small
+    =raw "#{@project.url}<span>/</span>"
+
+.row
+  .col-lg-5
+    - if !@urls[:result].blank?
+      %nav{"aria-label" => "Page navigation"}
+
+        .modal.fade.m_p_url_modal{:role => "dialog", :tabindex => "-1"}
+          .modal-dialog{:role => "document"}
+            .modal-content
+              .modal-header
+                %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
+                  %span{"aria-hidden" => "true"} &#215;
+                %h4.modal-title 
+                  Добавить новый url
+              .modal-body
+                .input-group
+                  %span.input-group-addon 
+                    = "#{@project.url}"
+                  %input#basic-url.form-control{:type => "text", 
+                                                :name=>"p_url_add"}/
+                  .input-group-btn
+                    %button.btn.btn-default.p_url_add{:type => "button"} +
+
+
+
+
+
+    = form_for @project, :method => "post" do |f|
+      =f.hidden_field :def,         :value => "edit"
+      =f.hidden_field :current_url, :value => "#{@urls[:result].first}"
+      =f.hidden_field :id,          :value => "#{@project.id}"
+
+      - if @project.errors.any?
+        #error_explanation
+          %h2= "#{pluralize(@project.errors.count, "error")} prohibited this project from being saved:"
+          %ul
+            - @project.errors.full_messages.each do |msg|
+              %li= msg
+
+      .form-group.p_url_add_group
+        %label.control-label{:for => "p_field_add"} &nbsp;
+        .input-group
+          %span#basic-addon3.input-group-addon 
+            = "Название поля"
+          %input.form-control{:type => "text", 
+                              :name=>"field_add",
+                              :placeholder => "Пример: name"}/
+          .input-group-btn
+            %button.btn.btn-info.p_field_add{:type => "button"} +
+
+      #fields-accordion.panel-group{"aria-multiselectable" => "true", :role => "tablist"}
+
+
+
+
+      //=f.submit "_"
+
+  .col-lg-7
+    #p_tabs
+      / Nav tabs
+      %ul.nav.nav-tabs{:role => "tablist"}
+        %li.active{:role => "presentation"}
+          %a{"aria-controls" => "t-urls", "data-toggle" => "tab", :href => "#t-urls", :role => "tab"} 
+            Ссылки
+        %li{:role => "presentation"}
+          %a{"aria-controls" => "t-code", "data-toggle" => "tab", :href => "#t-code", :role => "tab"} 
+            HTML код
+        %li{:role => "presentation"}
+          %a{"aria-controls" => "t-result", "data-toggle" => "tab", :href => "#t-result", :role => "tab"} 
+            Результат
+        %li{:role => "presentation"}
+          %a{"aria-controls" => "t-settings", "data-toggle" => "tab", :href => "#t-settings", :role => "tab"} 
+            Настройки
+        %li{:role => "presentation"}
+          %a{"aria-controls" => "t-out", "data-toggle" => "tab", :href => "#t-out", :role => "tab"} 
+            Выгрузка
+        %li{:role => "presentation"}
+          %a{"aria-controls" => "t-parse", "data-toggle" => "tab", :href => "#t-parse", :role => "tab"} 
+            Парсинг
+
+      / Tab panes
+
+      .tab-content
+        #t-urls.tab-pane.active{:role => "tabpanel"}
+          %ul
+            %li{:class => "active"}
+              %a{:href => "#/", :class=>"p_url_change",:title=>"/"}
+                =@project.url
+            -@urls[:result].each do |u|
+              %li
+                %a{:href => "##{u}", :class=>"p_url_change",:title=>"#{u}"}
+                  =raw "#{@project.url}#{u}"
+              
+            /%li
+            /  %a{ :href => "#url_add", 
+            /      :class=>"p_url_modal", 
+            /      :title=>"Добавить",
+            /      :data => {:target => ".m_p_url_modal", :toggle => "modal"}} +
+
+        #t-code.tab-pane{:role => "tabpanel"}
+          -formatter = Rouge::Formatters::HTML.new
+          -lexer = Rouge::Lexers::HTML.new
+          = preserve do
+            = raw formatter.format(lexer.lex(@html))
+        #t-result.tab-pane{:role => "tabpanel"}
+          #pre
+        #t-settings.tab-pane{:role => "tabpanel"}
+
+          = fields_for :setting do |s|
+            .form-group
+              %label
+                =s.radio_button :option_url, "recursion", :checked => "checked", :type => "radio"
+                Рекурсивно 
+              #recursion_hs
+                .input-group
+                  %span.input-group-addon
+                    Включить&nbsp;&nbsp;
+                  = s.text_field :include_str,  :aria => {:describedby => "..."}, 
+                                                :placeholder => "example: /product/", 
+                                                :class       => "form-control"
+                .input-group
+                  %span.input-group-addon
+                    Исключить
+                  = s.text_field :exclude_str, :aria => {:describedby => "..."}, 
+                                               :placeholder => "example: /category/", 
+                                               :class       => "form-control"
+
+            .form-group
+              %label
+                =s.radio_button :option_url, "range", :type  => "radio"
+                Диапазон URL
+              #range_hs
+                = s.text_field :range_str,  :aria => {:describedby => "..."}, 
+                                            :placeholder => "example: /product/{{1-100}}", 
+                                            :class       => "form-control",
+                                            :disabled    => "disabled"
+                           
+            .form-group                              
+              %label
+                =s.radio_button :option_url, "list", :type => "radio" 
+                Собственный список URL
+              #list_hs
+                = s.text_area :list_str,  :aria        => {:describedby => "..."},
+                                          :rows        => "6", 
+                                          :placeholder => "example: /product/1 \r /product/2", 
+                                          :class       => "form-control",
+                                          :disabled    => "disabled"
+            
+            =s.submit "Далее", :class=> "btn btn-primary btn-lg btn-block"
+
+
+        #t-out.tab-pane{:role => "tabpanel"}          
+
+        #t-parse.tab-pane{:role => "tabpanel"}
+
+
+
+
+
+//= link_to 'Show', @project
+//= link_to 'Back', projects_path

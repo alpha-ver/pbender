@@ -1,7 +1,25 @@
-%h1 Editing project
+.row
+  .col-lg-6.col-lg-offset-3
+    .panel.panel-default
+      .panel-body
+        %h1 Обновить проект
 
-= render 'form'
+        = form_for @project do |f|
 
-= link_to 'Show', @project
-\|
-= link_to 'Back', projects_path
+          .form-group
+            .input-group.input-group-lg
+              %span#sizing-addon1.input-group-addon Название
+              = f.text_field :name, :aria        => {:describedby => "sizing-addon1"}, 
+                                    :placeholder => "Например: магазин одежды", 
+                                    :class       => "form-control"
+          .form-group.has-error
+            .input-group.input-group-lg 
+              %span#sizing-addon1.input-group-addon Сылка&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+              = f.text_field :url,  :aria        => {:describedby => "sizing-addon1"}, 
+                                    :placeholder => "Например: http://www.google.ru", 
+                                    :class       => "form-control"
+          .actions
+            = f.submit 'Сохранить', :class=> "btn btn-primary btn-lg btn-block"
+
+//= link_to 'Show', @project
+//= link_to 'Back', projects_path

@@ -20,47 +20,59 @@ class ProjectsController < ApplicationController
 
   # GET /projects/1/edit
   def edit
-    case @project.status
-    when 'step1'
-      render :edit_step2
-    when 'step2'
-
-    when 'step3'
-
-    when 'step4'
-
+    p=P.new(:user => current_user, :project => @project)
+    ou = p.open_url
+    if ou[:success]
+      @urls=p.get_urls
+      @html=p.get_raw
+      if @urls[:success]
+        render :edit_parsing
+      else
+        flash.now[:error] = @urls[:error]
+        render :error 
+      end
     else
-      
+      flash.now[:error] = ou[:error]
+      render :error
     end
   end
 
   # POST /projects
   # POST /projects.json
   def create
-    @project        = Project.new(project_params)
-    @project.user   = current_user
-    @project.status = 'step1'
-
-    respond_to do |format|
-      if @project.save
-        format.html { redirect_to 'project#edit', notice: 'Project was successfully created.' }
+    pp = project_params
+    if pp[:success]
+      pp.delete(:success)
+      @project        = Project.new(pp)
+      @project.user   = current_user
+      if @project.valid? && @project.save 
+        redirect_to edit_project_path(@project), success: "Проект успешно создан."
       else
-        format.html { render :new }
+        flash[:error] = @project.errors
+        redirect_to new_project_path(request.parameters)
       end
+    else
+      flash[:error] = pp[:error]
+      redirect_to new_project_path(request.parameters)
     end
+
   end
 
   # PATCH/PUT /projects/1
   # PATCH/PUT /projects/1.json
   def update
-    respond_to do |format|
-      if @project.update(project_params)
-        format.html { redirect_to @project, notice: 'Project was successfully updated.' }
-        format.json { render :show, status: :ok, location: @project }
+    pp = project_params
+    if pp[:success]
+      pp.delete(:success)
+      if @project.update(pp)
+        redirect_to edit_project_path(@project), success: "Проект успешно обновлен."
       else
-        format.html { render :edit }
-        format.json { render json: @project.errors, status: :unprocessable_entity }
+        flash.now[:error] = @project.errors
+        render :edit
       end
+    else
+      flash.now[:error] = pp[:error]
+      render :edit
     end
   end
 
@@ -69,7 +81,7 @@ class ProjectsController < ApplicationController
   def destroy
     @project.destroy
     respond_to do |format|
-      format.html { redirect_to projects_url, notice: 'Project was successfully destroyed.' }
+      format.html { redirect_to projects_url, notice: t('project_was_successfully_destroyed') }
       format.json { head :no_content }
     end
   end
@@ -82,6 +94,18 @@ class ProjectsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def project_params
-      params.require(:project).permit(:name, :url)
+      begin
+        p=params.require(:project).permit(:name, :url)
+        url = URI.parse(p[:url])
+        if !url.scheme.nil? || !url.host.nil?
+          #test url
+          {:success => true, :name => p['name'], :url => url.scheme + '://' + url.host}
+        else
+          {:success => false, :error => "Ошибочный URL"}
+        end
+      rescue Exception => e
+        {:success => false, :error => e.message}
+      end
     end
+
 end

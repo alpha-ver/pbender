@@ -1,8 +1,25 @@
 Rails.application.routes.draw do
+
+  ##static page
+  root 'page#index'
+  get 'page/about'
+  get 'page/support'
+  get 'page/plugins'
+  get 'page/projects'
+  get 'page/manual'
+
+  post   'api/add_field'
+  post   'api/get_fields'
+  post   'api/edit_field'
+  post   'api/get_html'
+  delete 'api/delete_field'
+  
+
   resources :projects
   resources :projects
   resources :projects
   devise_for :users
+  
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

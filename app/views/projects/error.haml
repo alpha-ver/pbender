@@ -1,0 +1,13 @@
+.row
+  .col-lg-6.col-lg-offset-3
+    .panel.panel-default
+      .panel-body
+        %h1 Ошибка
+        %p 
+          Ошибка соединения с сервером 
+          %a{:href=>@project.url}
+            =@project.url
+          
+
+/= link_to 'Show', @project
+/= link_to 'Back', projects_path

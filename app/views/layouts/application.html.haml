@@ -25,20 +25,68 @@
           %span.icon-bar
           %span.icon-bar
           %span.icon-bar
-        %a.navbar-brand(href="#") Ap
+        %a.navbar-brand(href="/")
+          =raw "<b>b</b>ender"
         .navbar-collapse.collapse.navbar-responsive-collapse
-          %ul.nav.navbar-nav
-            %li= link_to "Link 1", "/path1"
-            %li= link_to "Link 2", "/path2"
-            %li= link_to "Link 3", "/path3"
-            %li= link_to "Link 3", "/path3"
+          %ul.nav.navbar-nav 
+            = active_link_to t('about'),     page_about_path,    :wrap_tag => :li
+            = active_link_to t('manual'),    page_manual_path,   :wrap_tag => :li
+            = active_link_to t('plugins'),   page_plugins_path,  :wrap_tag => :li
+            = active_link_to t('support'),   page_support_path,  :wrap_tag => :li
+            = active_link_to t('projects'),  page_projects_path, :wrap_tag => :li           
+          
+          %ul.nav.navbar-nav.navbar-right 
+            %li.dropdown
+              %a.dropdown-toggle{ :aria => { :expanded => "false", :haspopup => "true"}, 
+                                  :data => {:toggle => "dropdown"}, 
+                                  :href => "#", 
+                                  :role => "button"}
+                -if current_user
+                  =current_user.email
+                -else
+                  =t('sign_in')
+                %span.caret
+              -if current_user
+                %ul.dropdown-menu
+                  = active_link_to t('projects'), projects_path, :wrap_tag => :li
+                  = active_link_to t('profile'),  edit_user_registration_path, :wrap_tag => :li 
+              -else
+                .dropdown-menu{:style => "padding:17px;"}
+                  = form_tag session_path(:user) do
+                    = text_field_tag 'user[email]', "", :placeholder => t("username")
+                    = password_field_tag 'user[password]', "", :placeholder => t("password")
+                    = check_box_tag 'user[remember_me]'
+                    = label_tag 'user[remember_me]', t("remember_me")
+                    %button.btn.btn-primary 
+                      =t('login')
+
+
+
 
     .container
       .row
         .col-lg-12
-          = bootstrap_flash
+          = flash_messages
           = yield
       %footer
         = console
+
+
+
+    #loader-wraper
+      .loader
+        %svg#loader-1{  :height => "40px", 
+                        :style => "enable-background:new 0 0 50 50;", 
+                        :version => "1.1", 
+                        :viewbox => "0 0 50 50", 
+                        :width => "40px", 
+                        :x => "0px", 
+                        "xml:space" => "preserve", 
+                        :xmlns => "http://www.w3.org/2000/svg", 
+                        "xmlns:xlink" => "http://www.w3.org/1999/xlink", 
+                        :y => "0px"}
+
+          %path{:d => "M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z", :fill => "#007095"}
+            %animatetransform{:attributename => "transform", :attributetype => "xml", :dur => "0.6s", :from => "0 25 25", :repeatcount => "indefinite", :to => "360 25 25", :type => "rotate"}
 
 
