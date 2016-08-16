@@ -1,9 +1,10 @@
 class CreateResults < ActiveRecord::Migration
   def change
     create_table :results do |t|
-      t.string :type, default: 'text'
-      t.text    :result_text 
-      t.text    :result_arr, array: true, default: []
+      t.text     :result_text 
+      t.text     :result_arr, array: true, default: []
+      t.integer  :result_int
+
       t.boolean :success, default:false
       t.string  :log
       

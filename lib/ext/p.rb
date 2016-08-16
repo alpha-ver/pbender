@@ -15,9 +15,10 @@ class P
 		@doc      = nil
 	end
 
-	def open_url(url='')
+	def open_url(url='/')
     old_full_url = @full_url
-    @full_url    = @project.url + url
+    @path_url = url
+    @full_url = @project.url + url
 
 		begin
       html = open(@full_url).read.force_encoding("UTF-8")
@@ -28,6 +29,73 @@ class P
 			{:success => false, :error => e.message}
 		end
 	end
+
+  def get_urls
+    urls = @doc.xpath("//a").map{|i| i.attr('href')}.uniq.compact
+    urls.delete('/')
+    u    = []
+    urls.each do |url|
+      uri = URI.parse(url)
+        if !uri.path.nil?
+          if  uri.host.nil? &&  uri.path[0] == "/"
+            if uri.query.nil? 
+              u << uri.path
+            else
+              u << uri.path + "?" + uri.qery  
+            end
+          elsif uri.host.nil? && uri.path[0] != "/"
+            if uri.query.nil? 
+              u << URI.parse(@full_url).path + uri.path
+            else
+              u << URI.parse(@full_url).path + uri.path + "?" + uri.qery  
+            end
+          elsif uri.host == URI.parse(@project.url).host
+            if uri.query.nil? 
+              u << uri.path
+            else
+              u << uri.path + "?" + uri.query  
+            end         
+          end
+        end
+    end
+    {:success => true, :result => u.uniq.compact}
+  end
+
+  def get_urls_recursive
+    if !@project.setting.blank? && @project.setting['option_url'] == 'recursion'
+      urls = get_urls
+      if !@project.setting['include_str'].blank?
+        is   = @project.setting['include_str']
+        urls = urls[:result].map{|i| i.match(is) ? i : nil }.compact
+      end
+
+      if !@project.setting['exclude_str'].blank?
+        es   = @project.setting['exclude_str']
+        urls = urls[:result].map{|i| i.match(ex) ? i : nil }.compact
+      end
+      {:success => true, :result => urls}
+    else
+      {:success => false,:error => ""}
+    end
+  end
+
+  def url_skip?
+    i = false
+    e = false
+    if !@project.setting['include_str'].blank?
+      i = @path_url.match(@project.setting['include_str']).nil?
+    end
+
+    if !@project.setting['exclude_str'].blank?
+      e = !@path_url.match(@project.setting['exclude_str']).nil?
+    end
+    
+    i || e
+  end
+
+  def get_sha()
+     Digest::SHA1.hexdigest @doc.to_s.force_encoding("UTF-8")
+  end
 
   def get_raw()
     @doc.to_s.force_encoding("UTF-8")
@@ -65,6 +133,11 @@ class P
       {:success => false, :error => r[:error]}
     end
   end
+
+
+
+
+  private
 
     def xpath(str)
       begin

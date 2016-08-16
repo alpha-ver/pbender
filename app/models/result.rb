@@ -1,5 +1,5 @@
 class Result < ActiveRecord::Base
 
-	belons_to :url
-	belons_to :field
+	belongs_to :url
+	belongs_to :field
 end

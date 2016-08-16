@@ -11,6 +11,8 @@ class ProjectsController < ApplicationController
   # GET /projects/1
   # GET /projects/1.json
   def show
+    @fields = @project.fields.where(:enabled => true).all
+    @urls   = @project.urls.where(:parse => true, :skip => false).paginate(:page => params[:page], :per_page => 10)
   end
 
   # GET /projects/new

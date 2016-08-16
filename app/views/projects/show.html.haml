@@ -1,5 +1,3 @@
-%p#notice= notice
-
 %p
   %b Name:
   = @project.name
@@ -13,6 +11,33 @@
   %b Status:
   = @project.status
 
-= link_to 'Edit', edit_project_path(@project)
-\|
-= link_to 'Back', projects_path
+%table.table.table-striped
+  %thead
+    %tr
+      %th URL
+      -@fields.each do |field|
+        %th
+          =field.name
+
+  %tbody
+    -@urls.each do |url|
+      %tr
+        %td
+          = url.url
+
+        -@fields.each do |field|
+          %td
+            -r=Result.find_by(:url_id => url.id, :field_id => field.id)
+            -if field.otype == "text" || field.otype == "html" || field.otype == "attr"
+              =r.result_text
+            -else
+              %ul
+                -r.result_arr.each do |rr|
+                  %li
+                    =rr
+
+= will_paginate @urls, renderer: BootstrapPagination::Rails 
+
+
+//= link_to 'Edit', edit_project_path(@project)
+//= link_to 'Back', projects_path
