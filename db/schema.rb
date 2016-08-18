@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160815062202) do
+ActiveRecord::Schema.define(version: 20160801102033) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,22 +35,26 @@ ActiveRecord::Schema.define(version: 20160815062202) do
     t.string   "name",                       null: false
     t.string   "url",                        null: false
     t.string   "status",     default: "new", null: false
+    t.string   "group"
     t.json     "setting",    default: {}
     t.json     "result",     default: {}
     t.integer  "progress",   default: 0
-    t.boolean  "start",      default: false
+    t.boolean  "tasking",    default: false
     t.integer  "interval",   default: 1800
+    t.integer  "pid"
     t.integer  "user_id",                    null: false
     t.datetime "start_at"
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
   end
 
+  add_index "projects", ["group"], name: "index_projects_on_group", using: :btree
   add_index "projects", ["user_id"], name: "index_projects_on_user_id", using: :btree
 
   create_table "results", force: :cascade do |t|
     t.text     "result_text"
     t.text     "result_arr",  default: [],                 array: true
+    t.integer  "result_int"
     t.boolean  "success",     default: false
     t.string   "log"
     t.integer  "url_id",                      null: false
@@ -78,12 +82,12 @@ ActiveRecord::Schema.define(version: 20160815062202) do
   add_index "urls", ["project_id", "url"], name: "index_urls_on_project_id_and_url", unique: true, using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                  default: "", null: false
-    t.string   "encrypted_password",     default: "", null: false
+    t.string   "email",                  default: "",    null: false
+    t.string   "encrypted_password",     default: "",    null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,  null: false
+    t.integer  "sign_in_count",          default: 0,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.inet     "current_sign_in_ip"
@@ -92,9 +96,9 @@ ActiveRecord::Schema.define(version: 20160815062202) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.string   "unconfirmed_email"
-    t.boolean  "admin"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.boolean  "admin",                  default: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree

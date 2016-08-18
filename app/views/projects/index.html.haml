@@ -3,18 +3,23 @@
 %table.table
   %thead
     %tr
+      %th{:width => '40px'}
       %th Name
       %th Url
       %th Status
       %th url all
       %th url parse
 
-      %th{:width => '100px'}
-      %th{:width => '135px'}
+      %th{:width => '96px'}
+      %th{:width => '152px'}
 
   %tbody
     - @projects.each do |project|
       %tr
+        %th
+          %button.btn.btn-default.btn-xs{:type => "button", :disabled=>false}
+            %span.glyphicon.glyphicon-refresh{"aria-hidden" => "true"}
+
         %td= project.name
         %td= project.url
         %td= project.status
@@ -27,15 +32,15 @@
             %span.glyphicon.glyphicon-edit{"aria-hidden" => "true"}
           = link_to project, :class=> 'btn btn-default btn-xs', :method => :delete, :data => { :confirm => 'Are you sure?' } do
             %span.glyphicon.glyphicon-trash{"aria-hidden" => "true"}
-
-        
         %td
+          %button.btn.btn-default.btn-xs{:type => "button", :disabled=>false}
+            %span.glyphicon.glyphicon-calendar{"aria-hidden" => "true"}
           %button.btn.btn-default.btn-xs{:type => "button", :disabled=>false}
             %span.glyphicon.glyphicon-play{"aria-hidden" => "true"}
           %button.btn.btn-default.btn-xs{:type => "button", :disabled=>false}
             %span.glyphicon.glyphicon-forward{"aria-hidden" => "true"}
-          %button.btn.btn-default.btn-xs{:type => "button", :disabled=>true}
-            %span.glyphicon.glyphicon-refresh{"aria-hidden" => "true"}
+          %button.btn.btn-default.btn-xs{:type => "button", :disabled=>false}
+            %span.glyphicon.glyphicon-repeat{"aria-hidden" => "true"}
           %button.btn.btn-default.btn-xs{:type => "button", :disabled=>false}
             %span.glyphicon.glyphicon-stop{"aria-hidden" => "true"}      
 

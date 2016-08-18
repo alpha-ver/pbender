@@ -1,0 +1,12 @@
+.row
+  .col-lg-6.col-lg-offset-3
+    .panel.panel-default
+      .panel-body
+        %h1 Ошибка
+        %p 
+          Неизвестное состояние задачи 
+          %em
+            =@project.name
+          \.
+        %p  
+          = link_to t('projects'), projects_path

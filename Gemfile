@@ -44,6 +44,7 @@ gem 'active_link_to'
 gem 'colorize'
 gem 'will_paginate'
 gem 'will_paginate-bootstrap'
+gem 'seed_dump'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

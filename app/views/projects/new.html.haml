@@ -13,6 +13,15 @@
                                     :placeholder => "Например: магазин одежды", 
                                     :class       => "form-control",
                                     :value       => params[:project].nil? ? "" :params[:project][:name]
+
+          .form-group
+            .input-group.input-group-lg
+              %span#sizing-addon1.input-group-addon Группа
+              = f.text_field :group, :aria        => {:describedby => "sizing-addon1"}, 
+                                     :placeholder => "Например: Новостные сайты", 
+                                     :class       => "form-control",
+                                     :value       => params[:project].nil? ? "" :params[:project][:group]
+
           .form-group
             .input-group.input-group-lg 
               %span#sizing-addon1.input-group-addon Сылка&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 

@@ -53,11 +53,6 @@
 
       #fields-accordion.panel-group{"aria-multiselectable" => "true", :role => "tablist"}
 
-
-
-
-      //=f.submit "_"
-
   .col-lg-7
     #p_tabs
       / Nav tabs
@@ -74,17 +69,12 @@
         %li{:role => "presentation"}
           %a{"aria-controls" => "t-settings", "data-toggle" => "tab", :href => "#t-settings", :role => "tab"} 
             Настройки
-        %li{:role => "presentation"}
-          %a{"aria-controls" => "t-out", "data-toggle" => "tab", :href => "#t-out", :role => "tab"} 
-            Выгрузка
-        %li{:role => "presentation"}
-          %a{"aria-controls" => "t-parse", "data-toggle" => "tab", :href => "#t-parse", :role => "tab"} 
-            Парсинг
 
       / Tab panes
 
       .tab-content
         #t-urls.tab-pane.active{:role => "tabpanel"}
+          %h3
           %ul
             %li{:class => "active"}
               %a{:href => "#/", :class=>"p_url_change",:title=>"/"}
@@ -101,60 +91,91 @@
             /      :data => {:target => ".m_p_url_modal", :toggle => "modal"}} +
 
         #t-code.tab-pane{:role => "tabpanel"}
+          %h3
           -formatter = Rouge::Formatters::HTML.new
           -lexer = Rouge::Lexers::HTML.new
           = preserve do
             = raw formatter.format(lexer.lex(@html))
         #t-result.tab-pane{:role => "tabpanel"}
+          %h3
           #pre
         #t-settings.tab-pane{:role => "tabpanel"}
+          %h3
 
           = fields_for :setting do |s|
+            .panel.panel-default#PanelSettingOut
+              .panel-heading
+                Базовые настройки парсинга
+
             .form-group
               %label
-                =s.radio_button :option_url, "recursion", :checked => "checked", :type => "radio"
+                =s.radio_button :option_url, "recursion", 
+                                :type => "radio",
+                                :checked => !@project.setting.nil? && @project.setting["option_url"] == "recursion" ? true : false
                 Рекурсивно 
               #recursion_hs
                 .input-group
                   %span.input-group-addon
                     Включить&nbsp;&nbsp;
-                  = s.text_field :include_str,  :aria => {:describedby => "..."}, 
-                                                :placeholder => "example: /product/", 
-                                                :class       => "form-control"
+                  = s.text_field :include_str,  :placeholder => "example: /product/", 
+                                                :class       => "form-control",
+                                                :value       => @project.setting.nil? ? '' : @project.setting["include_str"]
                 .input-group
                   %span.input-group-addon
                     Исключить
-                  = s.text_field :exclude_str, :aria => {:describedby => "..."}, 
-                                               :placeholder => "example: /category/", 
-                                               :class       => "form-control"
+                  = s.text_field :exclude_str, :placeholder => "example: /category/", 
+                                               :class       => "form-control",
+                                               :value       => @project.setting.nil? ? '' : @project.setting["exclude_str"]
+
+                .checkbox#CbOnlyPath
+                  %label
+                    = s.check_box :only_path, :checked => @project.setting.nil? ? false : @project.setting["only_path"] == 'true'
+                    Брать URL только с 
+                    %b
+                      главной
+                .input-group
+                  %span.input-group-addon
+                    Относительный путь
+                  = s.text_field :only_path_field,  :placeholder => "example: /news", 
+                                                    :class       => "form-control",
+                                                    :value       => @project.setting.nil? ? '' : @project.setting["only_path_field"]
+
+
+
+
+
+
+
 
             .form-group
               %label
-                =s.radio_button :option_url, "range", :type  => "radio"
+                =s.radio_button :option_url, "range", 
+                                :type  => "radio", 
+                                :checked => !@project.setting.nil? && @project.setting["option_url"] == "range" ? true : false
+
                 Диапазон URL
               #range_hs
-                = s.text_field :range_str,  :aria => {:describedby => "..."}, 
-                                            :placeholder => "example: /product/{{1-100}}", 
+                = s.text_field :range_str,  :placeholder => "example: /product/{{1-100}}", 
                                             :class       => "form-control",
-                                            :disabled    => "disabled"
+                                            :disabled    => "disabled",
+                                            :value       => @project.setting.nil? ? '' : @project.setting["range_str"]
                            
             .form-group                              
               %label
-                =s.radio_button :option_url, "list", :type => "radio" 
+                =s.radio_button :option_url, "list", 
+                                :type => "radio",
+                                :checked => !@project.setting.nil? && @project.setting["option_url"] == "list" ? true : false
                 Собственный список URL
               #list_hs
-                = s.text_area :list_str,  :aria        => {:describedby => "..."},
-                                          :rows        => "6", 
+                = s.text_area :list_str,  :rows        => "6", 
                                           :placeholder => "example: /product/1 \r /product/2", 
                                           :class       => "form-control",
-                                          :disabled    => "disabled"
+                                          :disabled    => "disabled",
+                                          :value       => @project.setting.nil? ? '' : @project.setting["list_str"]
             
-            =s.submit "Далее", :class=> "btn btn-primary btn-lg btn-block"
-
-
-        #t-out.tab-pane{:role => "tabpanel"}          
-
-        #t-parse.tab-pane{:role => "tabpanel"}
+            =s.button :class=> "btn btn-success btn-sm btn-block", :id => "ButtonSetting" do
+              %span.glyphicon.glyphicon-ok
+              Сохранить настройки
 
 
 

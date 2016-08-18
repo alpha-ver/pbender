@@ -5,7 +5,7 @@ class ProjectsController < ApplicationController
   # GET /projects
   # GET /projects.json
   def index
-    @projects = current_user.projects
+    @projects = current_user.projects.order(:group)
   end
 
   # GET /projects/1
@@ -27,11 +27,24 @@ class ProjectsController < ApplicationController
     if ou[:success]
       @urls=p.get_urls
       @html=p.get_raw
-      if @urls[:success]
+      if @urls[:success] && ( @project.status == "new"    || 
+                              @project.status == "finish" || 
+                              @project.status == "error"  ||
+                              @project.status == "stop")
         render :edit_parsing
-      else
+      elsif @urls[:success] && (@project.status == "new_task"    || 
+                                @project.status == "update_task" || 
+                                @project.status == "runing"      ||
+                                @project.status == "run"         ||
+                                @project.status == "stoping")
+        flash.now[:notice] = "Запущенную задачу нельзя редактировать."
+        render :task_started
+      elsif !@urls[:success]
         flash.now[:error] = @urls[:error]
         render :error 
+      else
+        flash.now[:error] = "Неизвестное состояние."
+        render :type_error        
       end
     else
       flash.now[:error] = ou[:error]

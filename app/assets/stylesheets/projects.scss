@@ -2,10 +2,6 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-.console {
-    position: relative!important;
-}
-
 // loader animate
 #loader-wraper{
   position: fixed;
@@ -38,3 +34,17 @@ body.loading #loader-wraper{
   display: inherit;
 }
 
+
+#range_hs, #list_hs{ 
+  display:none
+}
+
+.console {
+  position: fixed;
+  width: 1%!important;
+}
+
+.console:hover{
+  position: fixed;
+  width:100%!important;
+}

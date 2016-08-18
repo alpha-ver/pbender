@@ -94,6 +94,7 @@ task :bender => :environment do
           current_urls = current_project.urls.where(:parse => false).all
           p = P.new(:user => current_user, :project => current_project)
           current_project.status = "start"
+          current_project.pid = Process.pid
           current_project.save
           task_run = 1
 
@@ -108,9 +109,9 @@ task :bender => :environment do
                   urls = p.get_urls
 
                   if urls[:success]
+                    puts  "Первый запуск '#{current_project.name}/#{@current_user.email}" + 
+                          "найденно #{urls[:results].count} ссылок".colorize(:green)
                     Url.transaction do
-                      puts  "Первый запуск '#{current_project.name}/#{@current_user.email}" + 
-                            "найденно #{urls[:results].count} ссылок".colorize(:green)
                       urls[:result].each do |url|
                         Url.new(:url => url, :project_id => current_project.id).save
                       end

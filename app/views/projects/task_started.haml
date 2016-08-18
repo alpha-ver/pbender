@@ -1,0 +1,13 @@
+.row
+  .col-lg-6.col-lg-offset-3
+    .panel.panel-default
+      .panel-body
+        %h1 Задача запущенна
+        %p 
+          Сналача остановите задачу 
+          %em
+            =@project.name
+          или дождитесь её заверщения.
+          
+        %p
+          = link_to t('projects'), projects_path

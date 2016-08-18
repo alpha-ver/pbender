@@ -445,3 +445,51 @@ $ ->
           c "AJAX error #{xhr['status']} /api/edit_field", "error"
           console.log xhr
           $('body').removeClass('loading')
+
+    #Save/Update setting
+    $(document.body).delegate 'button#ButtonSetting', 'click', (event) ->
+      c "Button submit #{this.id}", "event"
+      $('body').addClass('loading')
+      name = this.id.split("_")[2]
+      ######
+      $.ajax
+        type: "POST"
+        url: '/api/upd_project_setting'
+        data: 
+          utf8: "✓"
+          _method: "post"
+          authenticity_token: $("input[name='authenticity_token']").val()
+          project:
+            id:   $("input[name='project\[id\]']").val()
+            step: $("input[name='project\[step\]']").val()
+            setting:
+              option_url:  $("input[name='setting\[option_url\]']" ).val()
+              include_str: $("input[name='setting\[include_str\]']").val()
+              exclude_str: $("input[name='setting\[exclude_str\]']").val()
+              range_str:   $("input[name='setting\[range_str\]']"  ).val()
+              list_str:    $("input[name='setting\[list_str\]']"   ).val()
+              only_path:   $("input[name='setting\[only_path\]']"   ).is( ":checked" )
+              only_path_field: $("input[name='setting\[only_path_field\]']").val()
+        success: (xhr) ->
+          clear_panel($("#PanelSettingOut"))         
+          if xhr['success']
+            $("#PanelSettingOut").addClass('panel-success')
+            $("#PanelSettingOut > .panel-heading").html('<span class="glyphicon glyphicon-exclamation-sign"></span> Настройки успешно сохранены.')
+          else
+            $("#PanelSettingOut").addClass('panel-error')
+            $("#PanelSettingOut > .panel-heading").html("<span class=\"glyphicon glyphicon-exclamation-sign\"></span> #{xhr['error']}")
+          $('body').removeClass('loading')
+        error: (xhr) -> 
+          $("#PanelSettingOut").addClass('panel-danger')
+          $("#PanelSettingOut > .panel-heading").html('<span class="glyphicon glyphicon-exclamation-sign"></span> Ошибка сервера')
+          c "AJAX error #{xhr['status']} /api/upd_project_setting", "error"
+          console.log xhr
+          $('body').removeClass('loading')
+
+    $("input#setting_only_path_field").change ->
+      c "event only_path_field", "event"
+      if $("input#setting_only_path_field").val() == ""
+        $('#CbOnlyPath b').html("главной")
+      else
+        $('#CbOnlyPath b').html( $("input#setting_only_path_field").val() )
+

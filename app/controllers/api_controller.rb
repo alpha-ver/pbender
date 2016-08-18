@@ -81,6 +81,16 @@ class ApiController < ApplicationController
   end
 
 
+  def upd_project_setting
+    @current_project.setting = params[:project][:setting]
+    if @current_project.valid?
+        render :json => { :success => @current_project.save, :params => params}
+    else
+      render :json => {:success => false, :error => "Ошибка сохранения!"}
+    end
+  end
+
+
   private
 
     def set_project

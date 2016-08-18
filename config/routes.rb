@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   post   'api/edit_field'
   post   'api/get_html'
   delete 'api/delete_field'
+  post   'api/upd_project_setting'
   
 
   resources :projects

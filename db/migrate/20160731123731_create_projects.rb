@@ -3,13 +3,14 @@ class CreateProjects < ActiveRecord::Migration
     create_table :projects do |t|
       t.string 	 :name,     null: false
       t.string 	 :url, 	    null: false
- 	   #t.string   :step,     null: false
       t.string 	 :status,   null: false, default: 'new'
+      t.string   :group,    default: nil
       t.json   	 :setting,  default: {}
       t.json     :result,   default: {}
       t.integer  :progress, default: 0 # 0-100 
-      t.boolean  :start,    default: false
+      t.boolean  :tasking,  default: false
       t.integer  :interval, default: 1800 #second
+      t.integer  :pid,      default: nil
       ###
       t.integer  :user_id,  null: false
       ###
@@ -19,5 +20,7 @@ class CreateProjects < ActiveRecord::Migration
     end
 
      add_index :projects, :user_id
+     add_index :projects, :group
+
   end
 end
