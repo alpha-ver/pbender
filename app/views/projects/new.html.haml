@@ -7,7 +7,7 @@
         = form_for @project do |f|
 
           .form-group
-            .input-group.input-group-lg
+            .input-group.input-group-xm
               %span#sizing-addon1.input-group-addon Название
               = f.text_field :name, :aria        => {:describedby => "sizing-addon1"}, 
                                     :placeholder => "Например: магазин одежды", 
@@ -15,22 +15,22 @@
                                     :value       => params[:project].nil? ? "" :params[:project][:name]
 
           .form-group
-            .input-group.input-group-lg
-              %span#sizing-addon1.input-group-addon Группа
+            .input-group.input-group-xm
+              %span#sizing-addon1.input-group-addon Группа&nbsp;&nbsp;&nbsp;&nbsp;
               = f.text_field :group, :aria        => {:describedby => "sizing-addon1"}, 
                                      :placeholder => "Например: Новостные сайты", 
                                      :class       => "form-control",
                                      :value       => params[:project].nil? ? "" :params[:project][:group]
 
           .form-group
-            .input-group.input-group-lg 
+            .input-group.input-group-xm
               %span#sizing-addon1.input-group-addon Сылка&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
               = f.text_field :url,  :aria        => {:describedby => "sizing-addon1"}, 
                                     :placeholder => "Например: http://www.google.ru", 
                                     :class       => "form-control",
                                     :value       => params[:project].nil? ? "" :params[:project][:url]
           .actions
-            = f.submit 'Сохранить', :class=> "btn btn-primary btn-lg btn-block"
+            = f.submit 'Сохранить', :class=> "btn btn-primary btn-xm btn-block"
 
 
 //= link_to 'Show', @project

@@ -245,7 +245,6 @@ $ ->
             authenticity_token: $("input[name='authenticity_token']").val()
             project: 
               id: $("input[name='project\[id\]']").val()
-              step: $("input[name='project\[step\]']").val()
             current_url: $("input[name='project\[current_url\]']").val()
           success: (xhr) ->
             if xhr['success']
@@ -349,7 +348,6 @@ $ ->
           authenticity_token: $("input[name='authenticity_token']").val()
           project: 
             id: $("input[name='project\[id\]']").val()
-            step: $("input[name='project\[step\]']").val()
           current_url: $("input[name='project\[current_url\]']").val() 
           field:
             name: name
@@ -461,7 +459,6 @@ $ ->
           authenticity_token: $("input[name='authenticity_token']").val()
           project:
             id:   $("input[name='project\[id\]']").val()
-            step: $("input[name='project\[step\]']").val()
             setting:
               option_url:  $("input[name='setting\[option_url\]']" ).val()
               include_str: $("input[name='setting\[include_str\]']").val()
@@ -493,3 +490,27 @@ $ ->
       else
         $('#CbOnlyPath b').html( $("input#setting_only_path_field").val() )
 
+    #Controll task
+    $(document.body).delegate '.controll_task > button', 'click', (event) ->
+      c "Button submit #{this.id}", "event"
+      $('body').addClass('loading')
+      bt = this.id.split("_")
+
+      ######
+      $.ajax
+        type: "POST"
+        url: '/api/controll_task'
+        data: 
+          utf8: "✓"
+          _method: "post"
+          authenticity_token: $("input[name='authenticity_token']").val()
+          project:
+            id: bt[1]
+            status: bt[0] 
+        success: (xhr) ->
+          clear_panel($("#PanelSettingOut"))         
+          $('body').removeClass('loading')
+        error: (xhr) -> 
+          c "AJAX error #{xhr['status']} /api/controll_task", "error"
+          console.log xhr
+          $('body').removeClass('loading')

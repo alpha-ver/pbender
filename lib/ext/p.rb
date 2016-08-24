@@ -21,7 +21,8 @@ class P
     @full_url = @project.url + url
 
 		begin
-      html = open(@full_url).read.force_encoding("UTF-8")
+      html = open(@full_url).read
+      
 			@doc = Nokogiri::HTML(html)
 			{:success => true}
 		rescue Exception => e
@@ -30,24 +31,29 @@ class P
 		end
 	end
 
+  def get_url
+    @path_url
+  end
+
   def get_urls
     urls = @doc.xpath("//a").map{|i| i.attr('href')}.uniq.compact
     urls.delete('/')
     u    = []
-    urls.each do |url|
-      uri = URI.parse(url)
+    begin
+      urls.each do |url|
+        uri = URI.parse(url)
         if !uri.path.nil?
           if  uri.host.nil? &&  uri.path[0] == "/"
             if uri.query.nil? 
               u << uri.path
             else
-              u << uri.path + "?" + uri.qery  
+              u << uri.path + "?" + uri.query  
             end
           elsif uri.host.nil? && uri.path[0] != "/"
             if uri.query.nil? 
               u << URI.parse(@full_url).path + uri.path
             else
-              u << URI.parse(@full_url).path + uri.path + "?" + uri.qery  
+              u << URI.parse(@full_url).path + uri.path + "?" + uri.query  
             end
           elsif uri.host == URI.parse(@project.url).host
             if uri.query.nil? 
@@ -57,8 +63,11 @@ class P
             end         
           end
         end
+      end
+      {:success => true, :result => u.uniq.compact}
+    rescue Exception => e
+      {:success => false, :error => e.message}
     end
-    {:success => true, :result => u.uniq.compact}
   end
 
   def get_urls_recursive
@@ -82,6 +91,7 @@ class P
   def url_skip?
     i = false
     e = false
+    
     if !@project.setting['include_str'].blank?
       i = @path_url.match(@project.setting['include_str']).nil?
     end
@@ -89,6 +99,8 @@ class P
     if !@project.setting['exclude_str'].blank?
       e = !@path_url.match(@project.setting['exclude_str']).nil?
     end
+
+    p @path_url
     
     i || e
   end
@@ -98,7 +110,7 @@ class P
   end
 
   def get_raw()
-    @doc.to_s.force_encoding("UTF-8")
+    @doc.to_s
   end
 
   def get_highlight()
@@ -110,7 +122,7 @@ class P
   def get_result_field(field)
     ren = nil
     r   = xpath(field[:setting]['xpath'])
-    if r[:success]
+    if r[:success] && !r[:result].blank?
       formatter = Rouge::Formatters::HTML.new
       lexer     = Rouge::Lexers::HTML.new
       reh       = nil
@@ -135,7 +147,9 @@ class P
   end
 
 
-
+  def save_img
+  
+  end
 
   private
 

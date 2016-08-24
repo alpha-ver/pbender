@@ -27,7 +27,7 @@ end
 
 def get_task
   begin
-    Project.find_by(:status => "new_task")
+    Project.find_by(:status => ["new_task", "update_task"])
   rescue Exception => ex
     begin
       ActiveRecord::Base.connection.reconnect!
@@ -78,7 +78,7 @@ task :bender => :environment do
 
       if !current_project.nil?
         puts "Найден новый процесс #{current_project.name} - #{current_project.url}" 
-        current_project.status = "starting"
+        current_project.status = "runing"
         current_project.save
         @fork_pids << fork do
           fork_signal = ""
@@ -91,12 +91,13 @@ task :bender => :environment do
           #####################################################################
           current_user   = current_project.user
           current_fields = current_project.fields.where(:enabled => true).order(:created_at).all
-          current_urls = current_project.urls.where(:parse => false).all
+          current_urls   = current_project.urls.where(:parse => false).all
           p = P.new(:user => current_user, :project => current_project)
-          current_project.status = "start"
+          current_project.status = "run"
           current_project.pid = Process.pid
           current_project.save
-          task_run = 1
+          task_run  = 1
+          only_path = nil
 
           #тип парсинга
           if !current_project.setting.blank?
@@ -109,8 +110,9 @@ task :bender => :environment do
                   urls = p.get_urls
 
                   if urls[:success]
-                    puts  "Первый запуск '#{current_project.name}/#{@current_user.email}" + 
-                          "найденно #{urls[:results].count} ссылок".colorize(:green)
+                    puts  "Первый запуск '#{current_project.name}/#{current_user.email}" + 
+                          "найденно #{urls[:result].count} ссылок".colorize(:green)
+                    urls[:result].delete("/")
                     Url.transaction do
                       urls[:result].each do |url|
                         Url.new(:url => url, :project_id => current_project.id).save
@@ -123,20 +125,46 @@ task :bender => :environment do
 
                 elsif !current_urls.blank? 
                   current_url = current_urls[0]
-                  p.open_url(current_url.url)
-                  urls = p.get_urls
 
-                  if urls[:success]
-                    exist_url = Url.where(:url => urls[:result], :project_id => current_project.id).all
-                    if exist_url.blank?
-                      urls[:result].each do |url|
-                        Url.new(:url => url, :project_id => current_project.id).save
-                      end
+                  ###брать ссылки только с 1 страницы
+                  if only_path.nil?
+                    if !current_project.setting.blank? && current_project.setting['only_path'] == "true"                    
+                      if current_project.setting['only_path_field'].blank?
+                        p.open_url
+                        only_path = 1
+                      else
+                        p.open_url(current_project.setting['only_path_field'])
+                        only_path = 1  
+                      end  
                     else
-                      urls[:result] = urls[:result] - exist_url.map {|i| i.url} - [current_url.url]
-                      if ![:result].blank?
+                      p.open_url(current_url.url)
+                    end
+
+                  else
+                    p.open_url(current_url.url)
+                  end
+
+
+                  #пропускаем парсин
+                  if only_path.nil? || only_path == 1
+                    #если брали ссылку то 1 и возьмем ссылки 1 раз
+                    if only_path == 1
+                      only_path = 2
+                    end
+
+                    urls = p.get_urls
+                    if urls[:success]
+                      exist_url = Url.where(:url => urls[:result], :project_id => current_project.id).all
+                      if exist_url.blank?
                         urls[:result].each do |url|
                           Url.new(:url => url, :project_id => current_project.id).save
+                        end
+                      else
+                        urls[:result] = urls[:result] - exist_url.map {|i| i.url} - [current_url.url]
+                        if ![:result].blank?
+                          urls[:result].each do |url|
+                            Url.new(:url => url, :project_id => current_project.id).save
+                          end
                         end
                       end
                     end
@@ -162,15 +190,19 @@ task :bender => :environment do
                 break
               end
 
-              ###Парсим
-              current_url_sha   = p.get_sha
-              current_url.parse = true
-              current_url.sha   = current_url_sha
+              #проверка
+              if current_url.url != p.get_url
+                current_url = Url.find_or_create_by(:url => p.get_url, :project_id => current_project.id)
+              end
+                current_url_sha   = p.get_sha
+                current_url.parse = true
+                current_url.sha   = current_url_sha
 
+              ###Парсим
               if p.url_skip?
                 current_url.skip  = true
                 current_url.log   = "Пропущенно по рекурсивным настройкам."
-                current_url.save
+                current_url.save!
               else
                 duble = current_project.urls.find_by(:duble => false, :sha => current_url_sha)
                 if duble.nil?
@@ -220,15 +252,15 @@ task :bender => :environment do
                             field_id: cf.id
                           )                          
                         end
-                        result.save
+                        result.save!
                         current_url.skip  = false
-                        current_url.save
+                        current_url.save!
                       else
                         current_url.skip  = true
                         current_url.log   = "Пропушенно по настройкам пользователя" + 
                                             "#{required ? '' : 'пустой'}" + 
                                             "#{unique   ? '' : ', не уникальный'}."
-                        current_url.save
+                        current_url.save!
                       end
                     end
                   end
@@ -240,7 +272,7 @@ task :bender => :environment do
                   current_url.duble_id = duble.id
                   current_url.sha      = current_url_sha
                   current_url.log      = "Пропущенно. Является дублирующей страницей."
-                  current_url.save
+                  current_url.save!
                 end
               end
 
@@ -257,7 +289,8 @@ task :bender => :environment do
               end
 
               sleep sprintf("%.2f", rand(500)/100.0 + 0.8).to_f
-              print "!"
+              p current_url
+
 
               if fork_signal == "HUP"
                 puts "Дочерний процесс #{Process.pid} Завершился.".colorize(:yellow)

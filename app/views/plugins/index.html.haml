@@ -1,0 +1,27 @@
+%h1 Listing plugins
+
+%table
+  %thead
+    %tr
+      %th Name,
+      %th Setting,
+      %th Class name,
+      %th User
+      %th
+      %th
+      %th
+
+  %tbody
+    - @plugins.each do |plugin|
+      %tr
+        %td= plugin.name,
+        %td= plugin.setting,
+        %td= plugin.class_name,
+        %td= plugin.user_id
+        %td= link_to 'Show', plugin
+        %td= link_to 'Edit', edit_plugin_path(plugin)
+        %td= link_to 'Destroy', plugin, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Plugin', new_plugin_path

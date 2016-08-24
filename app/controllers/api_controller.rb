@@ -90,6 +90,21 @@ class ApiController < ApplicationController
     end
   end
 
+  def controll_task
+    case params[:project][:status]
+    when "tasking"
+ 
+    when "newtask"
+      @current_project.status = "new_task"
+    when "updtask"
+      @current_project.status = "upd_task"
+    when "stop"
+      Process.kill("HUP", @current_project.pid)
+    end
+
+    render :json => {:success => @current_project.save, :params => params}
+  end
+
 
   private
 

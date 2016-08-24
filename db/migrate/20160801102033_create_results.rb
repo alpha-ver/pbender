@@ -4,6 +4,7 @@ class CreateResults < ActiveRecord::Migration
       t.text     :result_text 
       t.text     :result_arr, array: true, default: []
       t.integer  :result_int
+      t.boolean  :out, :false
 
       t.boolean :success, default:false
       t.string  :log

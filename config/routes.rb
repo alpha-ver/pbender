@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :plugins
   ##static page
   root 'page#index'
   get 'page/about'
@@ -14,7 +15,8 @@ Rails.application.routes.draw do
   post   'api/get_html'
   delete 'api/delete_field'
   post   'api/upd_project_setting'
-  
+  post   'api/controll_task'
+    
 
   resources :projects
   resources :projects

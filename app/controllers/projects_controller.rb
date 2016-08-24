@@ -110,7 +110,7 @@ class ProjectsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def project_params
       begin
-        p=params.require(:project).permit(:name, :url)
+        p=params.require(:project).permit(:name, :url, :group)
         url = URI.parse(p[:url])
         if !url.scheme.nil? || !url.host.nil?
           #test url
