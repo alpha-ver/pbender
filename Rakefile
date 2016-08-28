@@ -27,7 +27,16 @@ end
 
 def get_task
   begin
-    Project.find_by(:status => ["new_task", "update_task"])
+    p=Project.find_by(:status => ["new_task", "update_task"])
+    if p.nil?
+      p=Project.where("start_at < '#{Time.now.utc}' AND tasking = true").first
+      if !p.nil?
+        p.start_at = Time.now + p.interval
+      end
+    end
+    
+    p
+
   rescue Exception => ex
     begin
       ActiveRecord::Base.connection.reconnect!

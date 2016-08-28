@@ -46,7 +46,7 @@ clear_panel=(a) ->
   a.children("label").html('&nbsp;')
 
 get_checkbox=(a) ->
-  if a
+  if a && a != 'false'
     "checked=\"checked\""
   else
     ""
@@ -135,6 +135,22 @@ add_accordion_field=(v) ->
           "</div>"       
           "<div id=\"fieldInput_attr_#{v['name']}\">",
           "</div>",
+
+          "<div class=\"form-group\">",           
+            "<div class=\"input-group\">",
+              "<span class=\"input-group-addon\">Регулярка</span>",
+              "<input name=\"fieldOption_regex_#{v['name']}\" type=\"text\" class=\"form-control\" id=\"input_field_regex_#{v['name']}\" value=\"#{get_params(v['setting'], 'regex')}\">",
+            "</div>",
+          "</div>",
+
+          "<div class=\"checkbox\">",
+            "<label>",
+              "<input type=\"checkbox\" name=\"fieldOption_download_#{v['name']}\" #{get_checkbox(v['setting']['download'])}> Скачать",
+            "</label>",
+
+          "</div>",
+
+            
           "<button type=\"button\" id=\"fieldOption_submit_#{v['name']}\" class=\"btn btn-success fieldOption_submit btn-sm btn-block\">",
             "Сохранить / Проверить",
           "</button>"
@@ -354,6 +370,8 @@ $ ->
             setting:     
               xpath:    $("input[name='fieldOption_xpath_#{name}']").val()
               attr:     $("input[name='fieldOption_attr_#{name}']").val()
+              regex:    $("input[name='fieldOption_regex_#{name}']").val()
+              download: $("input[name='fieldOption_download_#{name}']").prop('checked')
             otype:    $("select[name='fieldOption_otype_#{name}']").find(":selected").val()
             unique:   $("input[name='fieldOption_unique_#{name}']").prop('checked')
             required: $("input[name='fieldOption_required_#{name}']").prop('checked')

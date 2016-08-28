@@ -51,8 +51,10 @@ class ApiController < ApplicationController
       current_field=@current_project.fields.find_by(:name => params[:field][:name])
 
       current_field.setting = {
-        :xpath => params[:field][:setting][:xpath],
-        :attr  => params[:field][:setting][:attr]
+        :xpath    => params[:field][:setting][:xpath],
+        :attr     => params[:field][:setting][:attr],
+        :regex    => params[:field][:setting][:regex],
+        :download => params[:field][:setting][:download]
       }
 
       current_field.otype    = params[:field][:otype]
@@ -93,7 +95,9 @@ class ApiController < ApplicationController
   def controll_task
     case params[:project][:status]
     when "tasking"
- 
+      @current_project.tasking  = true
+      @current_project.start_at = Time.now
+      @current_project.save 
     when "newtask"
       @current_project.status = "new_task"
     when "updtask"

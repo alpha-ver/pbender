@@ -13,6 +13,7 @@ class P
 		@project  = h[:project] 
     @full_url = nil
 		@doc      = nil
+    @site_name = 'http://pbender.ru'
 	end
 
 	def open_url(url='/')
@@ -140,15 +141,33 @@ class P
       when 'array_attr'
         ren=r[:result].map{|i| i.attr(field[:setting]['attr'])}.compact
       end
-      {:success => true, :result => ren, :result_highlight => reh}
+
+      #regex 
+      if !field[:setting]['regex'].blank?
+        regex = %r[#{field[:setting]['regex']}]i
+
+        if ren.class == Array
+          ren = ren.map{|i|
+            if !regex.match(i).nil?
+              # only first math
+              regex.match(i)[1]
+            end
+          }.compact
+        
+        else ren.class == String
+          if !regex.match(ren).nil?
+            # only first math
+            ren = regex.match(ren)[1]
+          end
+        end
+      end
+
+      #save file
+      ren = save_file(field, ren)
+      {:success => true, :result => ren, :result_highlight => reh, :downloads => field[:setting]['download']}
     else
       {:success => false, :error => r[:error]}
     end
-  end
-
-
-  def save_img
-  
   end
 
   private
@@ -161,4 +180,58 @@ class P
         {:success => false, :error => e.message}
       end
     end
+
+    def save_file(field, link)
+      if field[:setting]['download'] == 'true'
+        if link.class == Array
+          new_link = []
+          link.each do |i|
+            new_link << safe_open(i)
+          end
+        elsif link.class == String
+          new_link = safe_open(link)
+        end
+        new_link
+      else
+        link
+      end
+    end
+
+    def safe_open(path)
+      begin
+
+        uri = URI.parse(path)
+
+        if path[0] == "/"
+          url = @project.url + path
+        else
+          url = path
+        end
+        f = open(url).read
+        path = dir_create + Digest::MD5.hexdigest(f) + '.' + uri.path.split('.')[-1]
+        File.open(path, 'wb'){|sf| sf.write(f)}
+        f = nil
+        path.gsub!('public', '')
+      rescue Exception => e
+        e.message
+      end
+    end
+
+    def dir_create 
+      #@todo код говно
+      prefix = 'public/pf/'
+      us = @user.id.to_s
+      ps = @project.id.to_s
+      if !Dir.exist?(prefix + us)
+        Dir.mkdir(prefix + us)
+      end
+      
+      if !Dir.exist?(prefix + us + '/' + ps)
+        Dir.mkdir(prefix + us + '/' + ps)
+      end
+
+      prefix + us + '/' + ps  + '/'
+    end
+
+
 end
