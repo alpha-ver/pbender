@@ -46,12 +46,27 @@ class OutGithub
       }
     ]
 
-    template = Erubis::Eruby.new(erb_layout).result({:l =>l, :time_now => time})
-    path = "_post/#{time.strftime('%Y-%m-%d')}-#{time.to_i}.html"
+    if !l['image'].blank? && l['image'][0][:setting][:download] == 'true'
+      if !l['image'][1].blank? && !l['image'][1][:result_text].blank?
+        file = File.read("#{Rails.root}/public#{l['image'][1][:result_text]}")
+        name = l['image'][1][:result_text].split("/")[-1]
+        create("img/#{name}", file)
+        image_tag = "<img src=\"/img/#{name}\">"
+      else
+        image_tag = ''
+      end
+    elsif !l['image'].blank? && l['image'][0][:setting]['download'] == 'false'
+      image_tag = ''
+    else
+      image_tag = ''
+    end
+      
+    template = Erubis::Eruby.new(erb_layout).result({:l =>l, :time_now => time, :image_tag => image_tag})
+    path = "_posts/#{time.strftime('%Y-%m-%d')}-#{time.to_i}.html"
     create(path, template)
   end
 
-  private
+  #private
     def init_github 
       @gh = Github.new  basic_auth: "#{setting_field('login')}:#{setting_field('password')}",
                         adapter: :net_http,

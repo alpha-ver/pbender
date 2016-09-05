@@ -90,6 +90,12 @@ panel_class=(v) ->
 
 add_accordion_field=(v) ->
   c "add accordion field #{v['name']}", "event"
+
+  if v['setting']!=null
+    dow = get_checkbox(v['setting']['download'])
+  else
+    dow = ''
+
   html = [
     "<div class=\"panel #{panel_class(v)}\" id=\"panel_field_#{v['name']}\">",
       "<div class=\"panel-heading\" role=\"tab\" id=\"heading_#{v['name']}\">",
@@ -148,7 +154,7 @@ add_accordion_field=(v) ->
 
           "<div class=\"checkbox\">",
             "<label>",
-              "<input type=\"checkbox\" name=\"fieldOption_download_#{v['name']}\" #{get_checkbox(v['setting']['download'])}> Скачать",
+              "<input type=\"checkbox\" name=\"fieldOption_download_#{v['name']}\" #{dow}> Скачать",
             "</label>",
 
           "</div>",

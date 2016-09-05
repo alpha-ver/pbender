@@ -29,7 +29,7 @@ def get_task
   begin
     p=Project.find_by(:status => ["new_task", "update_task"], :pid => nil)
     if p.nil?
-      p=Project.where("start_at < '#{Time.now.utc}' AND tasking = true AND pid = null").first
+      p=Project.where("start_at < '#{Time.now.utc}' AND tasking = true AND pid is null").first
       if !p.nil?
         p.start_at = Time.now + p.interval
       end
@@ -391,10 +391,12 @@ task :bender => :environment do
             else
               current_project.result = {:error => "Не заполенны настройки!"}
               current_project.status = "error"
+              current_project.pid = nil
               current_project.save
             end
 
           rescue => e
+            puts "Произошла ошибка в Задаче #{current_project.id}/#{current_project.name}".colorize(:red)
             puts "Error during processing: #{$!}".colorize(:red)
             puts "Backtrace:\n\t#{e.backtrace.join("\n\t")}"
 
