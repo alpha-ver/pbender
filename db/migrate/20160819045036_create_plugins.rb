@@ -5,6 +5,7 @@ class CreatePlugins < ActiveRecord::Migration
       t.json    :setting
       t.string  :class_name
       t.integer :user_id
+      t.boolean :test, :default => false
 
       t.timestamps null: false
     end

@@ -22,6 +22,7 @@ class ProjectsController < ApplicationController
 
   # GET /projects/1/edit
   def edit
+    @plugins = Plugin.where(:user_id => current_user.id, :test => true).all
     p=P.new(:user => current_user, :project => @project)
     ou = p.open_url
     if ou[:success]

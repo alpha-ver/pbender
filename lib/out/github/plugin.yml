@@ -1,0 +1,99 @@
+#info plugin
+name:
+  en: Github Api plugin out
+  ru: Github Api plugin out
+description:
+  en: Github desc
+  ru: Github desc        
+email:  hav0k@me.com
+author: Alexey Vildyaev
+site:   http://hav0k.ru
+
+#Setting fields
+setting: 
+  - type: InputField
+    name: login    
+    request: true
+    label:
+      ru: Логин 
+      en: Login
+    placeholder:
+      ru: Логин 
+      en: Login
+
+  - type: PasswordField
+    name: password
+    request: true
+    label: 
+      ru: Пароль
+      en: Password  
+    placeholder:
+      ru: Пароль
+      en: Password
+         
+  - type: InputField 
+    name: repo
+    request: true
+    label:
+      ru: Репозиторий
+      en: Repo     
+    placeholder:
+      ru: Репозиторий
+      en: Repo
+
+  - type: SelectField 
+    name: layout
+    request: false
+    label:
+      ru: Шаблон
+      en: layout     
+    placeholder:
+      ru: Шаблон
+      en: Layout
+    options:
+      - name: jekyll
+        label: 
+          ru: jekyll
+          en: jekyll
+        description:
+          ru: j
+          en: JJ
+        path: layout/jekyll.erb
+
+#Out fields
+fields:
+  - name: title
+    description: 
+      ru: Заголовок поста
+      en: Title post
+    types: 
+      String
+    request: true
+    local_file: false
+
+  - name: content
+    description: 
+      ru: Контент поста
+      en: Content post
+    types: 
+      String
+    request: true
+    local_file: false
+
+  - name: image
+    description: 
+      ru: Изображение
+      en: Image
+    types: 
+      String
+    request: false
+    local_file: true
+
+  - name: image
+    description: 
+      ru: Изображение
+      en: Image
+    types: 
+      String
+    request: false
+    local_file: true

@@ -139,14 +139,6 @@
                   = s.text_field :only_path_field,  :placeholder => "example: /news", 
                                                     :class       => "form-control",
                                                     :value       => @project.setting.nil? ? '' : @project.setting["only_path_field"]
-
-
-
-
-
-
-
-
             .form-group
               %label
                 =s.radio_button :option_url, "range", 
@@ -172,6 +164,12 @@
                                           :class       => "form-control",
                                           :disabled    => "disabled",
                                           :value       => @project.setting.nil? ? '' : @project.setting["list_str"]
+
+
+            .form-group
+              %label
+                Плагин выгрузки
+              = s.select :class_name, [[t('not_use_out'), 0]] + @plugins.map{|i| [i.name, i.id]}, {:selected => !@project.setting.nil? && !@project.setting['plugin'].nil? && !@project.setting['plugin']['id'].nil? ? @project.setting['plugin']['id'] : 0}, :class=>"OutPlugin_select"
             
             =s.button :class=> "btn btn-success btn-sm btn-block", :id => "ButtonSetting" do
               %span.glyphicon.glyphicon-ok

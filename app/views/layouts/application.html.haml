@@ -49,7 +49,10 @@
               -if current_user
                 %ul.dropdown-menu
                   = active_link_to t('projects'), projects_path, :wrap_tag => :li
+                  = active_link_to t('plugin'),   plugins_path, :wrap_tag => :li 
+
                   = active_link_to t('profile'),  edit_user_registration_path, :wrap_tag => :li 
+
               -else
                 .dropdown-menu{:style => "padding:17px;"}
                   = form_tag session_path(:user) do

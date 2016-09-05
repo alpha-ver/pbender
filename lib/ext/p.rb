@@ -17,6 +17,7 @@ class P
 	end
 
 	def open_url(url='/')
+    print url
     old_full_url = @full_url
     @path_url = url
     @full_url = @project.url + url
@@ -37,11 +38,15 @@ class P
   end
 
   def get_urls
-    urls = @doc.xpath("//a").map{|i| i.attr('href')}.uniq.compact
-    urls.delete('/')
-    u    = []
     begin
+      urls = @doc.xpath("//a").map{|i| i.attr('href')}.uniq.compact
+      urls.delete('/')
+      u    = []
+    
       urls.each do |url|
+        #fo lo urls
+        url.gsub!(/([\s]+)/, '')
+        
         uri = URI.parse(url)
         if !uri.path.nil?
           if  uri.host.nil? &&  uri.path[0] == "/"
@@ -100,8 +105,6 @@ class P
     if !@project.setting['exclude_str'].blank?
       e = !@path_url.match(@project.setting['exclude_str']).nil?
     end
-
-    p @path_url
     
     i || e
   end
@@ -137,9 +140,9 @@ class P
       when 'attr'
         ren=r[:result].attr(field[:setting]['attr']).to_s
       when 'array'
-        ren=r[:result].map{|i| i.text}.compact
+        ren=r[:result].map{|i| i.text}.compact.uniq
       when 'array_attr'
-        ren=r[:result].map{|i| i.attr(field[:setting]['attr'])}.compact
+        ren=r[:result].map{|i| i.attr(field[:setting]['attr'])}.compact.uniq
       end
 
       #regex 

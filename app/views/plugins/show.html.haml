@@ -1,17 +1,18 @@
 %p#notice= notice
 
 %p
-  %b Name,:
-  = @plugin.name,
+  %b Name:
+  = @plugin.name
 %p
-  %b Setting,:
-  = @plugin.setting,
+  %b Setting:
+  = @plugin.setting
 %p
-  %b Class name,:
-  = @plugin.class_name,
+  %b Class name:
+  = @plugin.class_name
 %p
   %b User:
   = @plugin.user_id
+
 
 = link_to 'Edit', edit_plugin_path(@plugin)
 \|

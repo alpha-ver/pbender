@@ -71,6 +71,9 @@ selectpicker=() ->
   $('.fieldOption_select').selectpicker ->
     style: 'btn-info'
 
+  $('.OutPlugin_select').selectpicker ->
+    style: 'btn-info'
+
 panel_class=(v) ->
   if v['add'] != undefined
     'panel-warning'
@@ -478,13 +481,17 @@ $ ->
           project:
             id:   $("input[name='project\[id\]']").val()
             setting:
-              option_url:  $("input[name='setting\[option_url\]']" ).val()
-              include_str: $("input[name='setting\[include_str\]']").val()
-              exclude_str: $("input[name='setting\[exclude_str\]']").val()
-              range_str:   $("input[name='setting\[range_str\]']"  ).val()
-              list_str:    $("input[name='setting\[list_str\]']"   ).val()
-              only_path:   $("input[name='setting\[only_path\]']"   ).is( ":checked" )
+              option_url:      $("input[name='setting\[option_url\]']" ).val()
+              include_str:     $("input[name='setting\[include_str\]']").val()
+              exclude_str:     $("input[name='setting\[exclude_str\]']").val()
+              range_str:       $("input[name='setting\[range_str\]']"  ).val()
+              list_str:        $("input[name='setting\[list_str\]']"   ).val()
+              only_path:       $("input[name='setting\[only_path\]']"   ).is( ":checked" )
               only_path_field: $("input[name='setting\[only_path_field\]']").val()
+              plugin:
+                id: $("select.OutPlugin_select").find(":selected").val()
+
+
         success: (xhr) ->
           clear_panel($("#PanelSettingOut"))         
           if xhr['success']

@@ -36,8 +36,9 @@ ActiveRecord::Schema.define(version: 20160819045036) do
     t.json     "setting"
     t.string   "class_name"
     t.integer  "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.boolean  "test",       default: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   create_table "projects", force: :cascade do |t|

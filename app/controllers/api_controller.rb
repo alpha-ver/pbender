@@ -95,18 +95,25 @@ class ApiController < ApplicationController
   def controll_task
     case params[:project][:status]
     when "tasking"
-      @current_project.tasking  = true
-      @current_project.start_at = Time.now
-      @current_project.save 
+      if !@current_project.pid.blank? && Process.exists?(@current_project.pid)
+        success = false
+      else
+        @current_project.tasking  = true
+        @current_project.start_at = Time.now
+        success = @current_project.save 
+      end
+
     when "newtask"
       @current_project.status = "new_task"
+      success = @current_project.save
     when "updtask"
       @current_project.status = "upd_task"
+      success = @current_project.save
     when "stop"
       Process.kill("HUP", @current_project.pid)
     end
 
-    render :json => {:success => @current_project.save, :params => params}
+    render :json => {:success => success, :params => params}
   end
 
 

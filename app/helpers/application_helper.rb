@@ -20,4 +20,17 @@ def flash_messages(opts = {})
   html_all.html_safe
 end
 
+
+def plugin_setting_val(name)
+  if @plugin.setting.nil? 
+    ''
+  else
+    if @plugin.setting[name].nil?
+      '' 
+    else
+       @plugin.setting[name]
+    end
+  end
+end
+
 end

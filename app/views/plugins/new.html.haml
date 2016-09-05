@@ -1,5 +1,23 @@
 %h1 New plugin
 
-= render 'form'
+= form_for @plugin do |f|
+  - if @plugin.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@plugin.errors.count, "error")} prohibited this plugin from being saved:"
+      %ul
+        - @plugin.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field
+    = f.label :name
+    = f.text_field :name
+  .field
+    = f.label :class_name
+    = f.select :class_name, @out_plugins, {}, :class=>""
+
+
+
+  .actions
+    = f.submit 'Save'
 
 = link_to 'Back', plugins_path
