@@ -1,4 +1,4 @@
-user=User.new(id: 1, email: "hav0k@me.com", password: "12345678",  admin: true)
+user=User.new(id: 1, email: "hav0k@me.com", password: "kjkjirf8887",  admin: true)
 user.save
 user.confirm
 
