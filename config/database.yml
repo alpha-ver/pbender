@@ -87,4 +87,4 @@ production:
   <<: *default
   database: bender_production
   username: bender
-  password: <%= ENV['BENDER_DATABASE_PASSWORD'] %>
+  password: TtB4XEPkBdmZ3nffxkN9
