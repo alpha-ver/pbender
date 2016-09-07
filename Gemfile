@@ -61,6 +61,7 @@ group :development do
   gem 'capistrano-rails'
   gem 'capistrano-rbenv', '~> 2.0', require: false
   gem 'capistrano-secrets-yml'
+  gem 'capistrano-rails-collection'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 end
