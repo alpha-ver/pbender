@@ -72,7 +72,8 @@
           = flash_messages
           = yield
       %footer
-        = console
+        -if !current_user.blank? && current_user.admin? 
+          = console
 
 
 
