@@ -95,4 +95,6 @@ Rails.application.configure do
     user_name: "robot@pbender.ru",
     password: 'gKb9b1C8tKF1opVkkwxW'
   }
+
+  config.web_console.development_only = false
 end
