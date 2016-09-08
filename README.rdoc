@@ -1,3 +1,5 @@
 === статус проекта
 
 new - только что созданный проект
+
+robot@pbender.ru/hello - gKb9b1C8tKF1opVkkwxW
