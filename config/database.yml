@@ -24,7 +24,7 @@ default: &default
 
 development:
   <<: *default
-  database: bender_production
+  database: ap_development
   username: h0
   password: TtB4XEPkBdmZ3nffxkN9
   
