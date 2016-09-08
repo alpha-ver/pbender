@@ -222,7 +222,7 @@ class P
 
     def dir_create 
       #@todo код говно
-      prefix = 'public/pf/'
+      prefix = "#{Rails.root}/public/pf/"
       us = @user.id.to_s
       ps = @project.id.to_s
       if !Dir.exist?(prefix + us)
