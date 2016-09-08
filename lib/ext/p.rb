@@ -214,7 +214,7 @@ class P
         path = dir_create + Digest::MD5.hexdigest(f) + '.' + uri.path.split('.')[-1]
         File.open(path, 'wb'){|sf| sf.write(f)}
         f = nil
-        path.gsub!('public', '')
+        path
       rescue Exception => e
         e.message
       end
