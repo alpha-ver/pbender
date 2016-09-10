@@ -25,6 +25,9 @@ require 'capistrano/rails/migrations'
 require 'capistrano/secrets_yml'
 require 'capistrano/rails/collection'
 
+require 'capistrano/monit'
+require 'capistrano/runit'
+
 
 # require 'capistrano/passenger'
 

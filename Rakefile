@@ -92,7 +92,7 @@ task :bender => :environment do
 
   #preloop
   _global()
-  Signal.trap("SIGINT"){
+  Signal.trap("SIGINT", "SIGTERM"){
     if @rake_pid == Process.pid
       @signal_count +=1
       if @signal == "SIGINT" && @signal_count >  5
