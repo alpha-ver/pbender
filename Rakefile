@@ -88,7 +88,7 @@ desc "Главный демон"
 task :bender => :environment do
 
   `echo "#{Process.pid}" > #{Rails.root}/tmp/pids/metrics_gen.pid`
-  `echo "#{Process.ppid}" > #{Merb.root}/tmp/pids/metrics_gen.ppid`
+  `echo "#{Process.ppid}" > #{Rails.root}/tmp/pids/metrics_gen.ppid`
 
   #preloop
   _global()
