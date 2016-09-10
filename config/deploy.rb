@@ -27,7 +27,7 @@ set :scm, :git
 # append :linked_files, 'config/database.yml', 'config/secrets.yml'
 
 # Default value for linked_dirs is []
-append :linked_dirs, 'public/pf'
+append :linked_dirs, 'public/pf', 'tmp/pids'
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
