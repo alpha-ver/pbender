@@ -39,3 +39,5 @@ set :keep_releases, 2
 namespace :deploy do
   task :restart => 'monit:restart'
 end
+
+after 'deploy:publishing', 'deploy:restart'
