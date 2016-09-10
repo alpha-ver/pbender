@@ -34,3 +34,8 @@ append :linked_dirs, 'public/pf', 'tmp/pids'
 
 # Default value for keep_releases is 5
 set :keep_releases, 2
+
+
+namespace :deploy do
+  task :restart => 'monit:restart'
+end
