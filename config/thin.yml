@@ -13,6 +13,6 @@ servers: 1
 threaded: true
 no-epoll: true
 daemonize: true
-socket: tmp/sockets/thin.sock
+port: 3333
 chdir: /app/bender/current
 tag: bender-thin aux
