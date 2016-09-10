@@ -51,6 +51,9 @@ gem 'rubyXL'
 gem 'process_exists'
 gem 'web-console', '~> 2.0'
 
+group :production do
+  gem 'thin'
+end
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

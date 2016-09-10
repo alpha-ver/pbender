@@ -1,7 +1,7 @@
 <%-if !l['category'].blank? && l['category'][0][:otype] == 'text'%>
   <%-categories = l['category'][1][:result_text]%>
 <%-elsif !l['category'].blank? && l['category'][0][:otype] == 'array'%>
-  <%-categories = l['category'][1][:result_arr].join(' ')%>
+  <%-categories = l['category'][1][:result_arr].to_s%>
 <%-else%>
   <%-categories = ''%>
 <%-end%>

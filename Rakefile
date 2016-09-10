@@ -86,9 +86,12 @@ end
 
 desc "Главный демон"
 task :bender => :environment do
+
+  `echo "#{Process.pid}" > #{Rails.root}/tmp/pids/metrics_gen.pid`
+  `echo "#{Process.ppid}" > #{Merb.root}/tmp/pids/metrics_gen.ppid`
+
   #preloop
   _global()
-
   Signal.trap("SIGINT"){
     if @rake_pid == Process.pid
       @signal_count +=1
@@ -423,5 +426,12 @@ task :bender => :environment do
     @time_current = Time.now
     sleep @pause_loop
   }
+
+end
+
+
+desc "Task After Deploy"
+task :after_deploy => :environment  do
+  File.symlink "/app/bender/current/public/pf", "/app/bender/shared/public/pf"
 
 end
