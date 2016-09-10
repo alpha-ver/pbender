@@ -25,10 +25,6 @@ require 'capistrano/rails/migrations'
 require 'capistrano/secrets_yml'
 require 'capistrano/rails/collection'
 
-require 'capistrano/monit'
-require 'capistrano/runit'
-
-
 # require 'capistrano/passenger'
 
 # Load custom tasks from `lib/capistrano/tasks` if you have any defined

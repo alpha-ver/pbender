@@ -34,9 +34,3 @@ append :linked_dirs, 'public/pf', 'tmp/pids'
 
 # Default value for keep_releases is 5
 set :keep_releases, 2
-
-before 'deploy:updating', 'monit:unmonitor'
-after 'deploy:finished', 'monit:monitor'
-
-before "monit:unmonitor", "monit:stop"
-after  "monit:monitor",   "monit:start"
