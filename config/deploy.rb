@@ -39,18 +39,23 @@ set :keep_releases, 2
 namespace :monit do 
   desc "Task description"
   task :stop do
-    sudo 'monit unmonitor rake-bender'
-    sudo 'monit unmonitor task-bender'
-    sudo 'monit stop rake-bender'
-    sudo 'monit stop task-bender'
+    on roles(:app) do
+      sudo 'monit unmonitor rake-bender'
+      sudo 'monit unmonitor thin-bender'
+      sudo 'monit stop rake-bender'
+      sudo 'monit stop thin-bender'
+    end
   end
 
   desc "Task description"
   task :start do
-    sudo 'monit monitor rake-bender'
-    sudo 'monit monitor task-bender'
-    sudo 'monit start rake-bender'
-    sudo 'monit start task-bender'    
+    on roles(:app) do
+
+      sudo 'monit monitor rake-bender'
+      sudo 'monit monitor thin-bender'
+      sudo 'monit start rake-bender'
+      sudo 'monit start thin-bender'
+    end    
   end
 end
 
