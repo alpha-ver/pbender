@@ -42,15 +42,14 @@ namespace :monit do
     on roles(:app) do
       sudo 'monit unmonitor rake-bender'
       sudo 'monit unmonitor thin-bender'
-      sudo 'monit stop rake-bender'
-      sudo 'monit stop thin-bender'
+      sudo '/app/bender/current/rake_bender.sh stop'
+      sudo '/app/bender/shared/bundle/ruby/2.3.0/bin/thin stop -P /app/bender/current/tmp/pids/thin.3333.pid'
     end
   end
 
   desc "Task description"
   task :start do
     on roles(:app) do
-
       sudo 'monit monitor rake-bender'
       sudo 'monit monitor thin-bender'
       sudo 'monit start rake-bender'

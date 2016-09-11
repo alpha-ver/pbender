@@ -8,7 +8,7 @@ case $1 in
       ;;
     stop)
       kill `cat /app/bender/current/tmp/pids/metrics_gen.pid`
-      while ps -p ` cat /app/bender/current/tmp/pids/metrics_gen.pid` > /dev/null; do sleep 1; done
+      while ps -p `cat /app/bender/current/tmp/pids/metrics_gen.pid` > /dev/null; do sleep 1; done
       rm -rf /app/bender/current/tmp/pids/metrics_gen.pid
       echo 'End pid!'
       ;;
