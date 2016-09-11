@@ -92,28 +92,32 @@ task :bender => :environment do
 
   #preloop
   _global()
-  Signal.trap("SIGINT", "SIGTERM"){
-    if @rake_pid == Process.pid
-      @signal_count +=1
-      if @signal == "SIGINT" && @signal_count >  5
-        puts "\rАварийная остановка!".colorize(:red)
-        exit
-      elsif @signal == "SIGINT" && @signal_count <= 5
-        puts "\rПогоди немного! Аварийная остановка через - #{6 - @signal_count} нажатий.".colorize(:red)
-      else
-        @signal = "SIGINT"
-        puts "\nСкоро выключимся!".colorize(:red)
-        @fork_pids.each do |pid|
-          begin
-            Process.kill("HUP", pid)
-            Process.wait
-          rescue Exception => e
-            puts "\rОшибка завершения процесса #{pid}.".colorize(:red)
+
+  ['SIGINT', 'SIGTERM'].each do |s|
+    Signal.trap(s){
+      if @rake_pid == Process.pid
+        @signal_count +=1
+        if @signal == "SIGINT" && @signal_count >  5
+          puts "\rАварийная остановка!".colorize(:red)
+          exit
+        elsif @signal == "SIGINT" && @signal_count <= 5
+          puts "\rПогоди немного! Аварийная остановка через - #{6 - @signal_count} нажатий.".colorize(:red)
+        else
+          @signal = "SIGINT"
+          puts "\nСкоро выключимся!".colorize(:red)
+          @fork_pids.each do |pid|
+            begin
+              Process.kill("HUP", pid)
+              Process.wait
+            rescue Exception => e
+              puts "\rОшибка завершения процесса #{pid}.".colorize(:red)
+            end
           end
         end
       end
-    end
-  }
+    }
+  end
+
   puts "--- Полетели ---".colorize(:green)
 
   loop {
