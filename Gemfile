@@ -35,6 +35,9 @@ gem "haml"
 gem "haml-rails"
 gem "mechanize"
 gem "devise"
+
+gem 'bootflat-rails'
+
 gem 'bootstrap-glyphicons'
 gem 'bootstrap-sass', '~> 3.3.6'
 gem 'rouge'

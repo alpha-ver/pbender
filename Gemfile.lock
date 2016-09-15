@@ -47,6 +47,8 @@ GEM
     bcrypt (3.1.11)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
+    bootflat-rails (0.1.0)
+      sass (~> 3.2)
     bootstrap-glyphicons (0.0.1)
       railties (>= 3.0)
       sass (>= 3.2)
@@ -282,6 +284,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_link_to
+  bootflat-rails
   bootstrap-glyphicons
   bootstrap-sass (~> 3.3.6)
   byebug
