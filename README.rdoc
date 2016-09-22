@@ -3,3 +3,26 @@
 new - только что созданный проект
 
 robot@pbender.ru - hello - gKb9b1C8tKF1opVkkwxW
+
+
+
+    - if !@urls[:result].blank?
+      %nav{"aria-label" => "Page navigation"}
+
+        .modal.fade.m_p_url_modal{:role => "dialog", :tabindex => "-1"}
+          .modal-dialog{:role => "document"}
+            .modal-content
+              .modal-header
+                %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
+                  %span{"aria-hidden" => "true"} &#215;
+                %h4.modal-title 
+                  Добавить новый url
+              .modal-body
+                .input-group
+                  %span.input-group-addon 
+                    = "#{@project.url}"
+                  %input#basic-url.form-control{:type => "text", 
+                                                :name=>"p_url_add"}/
+                  .input-group-btn
+                    %button.btn.btn-default.p_url_add{:type => "button"} +
+

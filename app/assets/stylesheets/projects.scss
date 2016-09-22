@@ -48,3 +48,32 @@ body.loading #loader-wraper{
   position: fixed;
   width:100%!important;
 }
+
+
+@media (min-width: 979px) {
+  #affix_sidebar.affix-top {
+    position: static;
+    margin-top:0px;
+      
+  }
+  #affix_sidebar.affix {
+    position: fixed;
+    top:0px;
+  }
+}
+
+.affix, .affix-top {
+  position:static;
+}
+
+#affix_sidebar{
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 1px;   
+}
+
+.panel { 
+  .panel-heading{
+    border-radius:0px
+  }
+}

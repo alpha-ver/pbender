@@ -66,7 +66,6 @@ get_params=(s, h) ->
     else
       "#{s[h]}".replace(/"/g, "'")
 
-
 selectpicker=() -> 
   $('.fieldOption_select').selectpicker ->
     style: 'btn-info'
@@ -91,22 +90,22 @@ panel_class=(v) ->
 add_accordion_field=(v) ->
   c "add accordion field #{v['name']}", "event"
 
-  if v['setting']!=null
-    dow = get_checkbox(v['setting']['download'])
-  else
+  if v['setting'] != null || v['setting'] != undefined
     dow = ''
+  else
+    dow = get_checkbox(v['setting']['download'])
 
   html = [
     "<div class=\"panel #{panel_class(v)}\" id=\"panel_field_#{v['name']}\">",
-      "<div class=\"panel-heading\" role=\"tab\" id=\"heading_#{v['name']}\">",
+      "<div class=\"panel-heading\" id=\"heading_#{v['name']}\">",
         "<h4 class=\"panel-title\">",
-          "<a class=\"collapsed\" role=\"button\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#accordion_field_#{v['name']}\" aria-expanded=\"false\" aria-controls=\"accordion_field_#{v['name']}\">",
+          "<a data-toggle=\"collapse\" data-parent=\"#fields-accordion\" href=\"#accordion_field_#{v['name']}\">",
             "&nbsp;",
             v['name'],
           "</a>",
         "</h4>",
       "</div>",
-      "<div id=\"accordion_field_#{v['name']}\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"heading_#{name}\">",
+      "<div id=\"accordion_field_#{v['name']}\" class=\"panel-collapse collapse\">",
         "<div class=\"panel-body\">",
           "<div class=\"checkbox\">",
             "<label>",
@@ -159,13 +158,15 @@ add_accordion_field=(v) ->
 
           "</div>",
 
-            
-          "<button type=\"button\" id=\"fieldOption_submit_#{v['name']}\" class=\"btn btn-success fieldOption_submit btn-sm btn-block\">",
-            "Сохранить / Проверить",
-          "</button>"
-          "<button type=\"button\" id=\"fieldOption_delete_#{v['name']}\" class=\"btn btn-danger fieldOption_delete btn-sm btn-block\">",
-            "Удалить",
-          "</button>"
+          "<div class=\"btn-group pull-right\">",
+            "<button type=\"button\" id=\"fieldOption_submit_#{v['name']}\" class=\"btn btn-success fieldOption_submit btn-sm\">",
+              "Сохранить / Проверить",
+            "</button>"
+            "<button type=\"button\" id=\"fieldOption_delete_#{v['name']}\" class=\"btn btn-danger fieldOption_delete btn-sm\">",
+              "Удалить",
+            "</button>"
+          "</div>",  
+
         "</div>",
       "</div>",
     "</div>"
@@ -193,6 +194,15 @@ add_accordion_field=(v) ->
 $ -> 
   $(document).ready ->
     c 'document_ready', 'event'
+
+    asw=$('#affix_sidebar').width()
+    $('#affix_sidebar').width(asw)
+
+    $('#affix_sidebar').affix(
+      offset:
+        top: 195
+    )
+
     #autoloading AJAX
     if $("#project_def").val() == "edit"
       $('body').addClass('loading')
@@ -205,6 +215,7 @@ $ ->
             if xhr['fields'].length !=0
               $.each xhr['fields'], (i,v) ->
                 add_accordion_field(v)
+              #field_affix()
             else
               #тут дизайн что нет не хуя
           else
@@ -315,6 +326,8 @@ $ ->
               add_accordion_field(
                 name:    xhr['params']['field_add'], 
                 add:     true )
+              #$('#fields-accordion').collapse()
+              #field_affix()
             else
               $('.p_url_add_group').addClass('has-error')
               $('.p_url_add_group > label').html(xhr['message'])

@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get 'page/plugins'
   get 'page/projects'
   get 'page/manual'
+  get 'page/test'
 
   post   'api/add_field'
   post   'api/get_fields'

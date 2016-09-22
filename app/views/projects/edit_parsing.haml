@@ -4,57 +4,34 @@
 
 .row
   .col-lg-5
-    - if !@urls[:result].blank?
-      %nav{"aria-label" => "Page navigation"}
+    #affix_sidebar
+      = form_for @project, :method => "post" do |f|
+        =f.hidden_field :def,         :value => "edit"
+        =f.hidden_field :current_url, :value => "#{@urls[:result].first}"
+        =f.hidden_field :id,          :value => "#{@project.id}"
 
-        .modal.fade.m_p_url_modal{:role => "dialog", :tabindex => "-1"}
-          .modal-dialog{:role => "document"}
-            .modal-content
-              .modal-header
-                %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
-                  %span{"aria-hidden" => "true"} &#215;
-                %h4.modal-title 
-                  Добавить новый url
-              .modal-body
-                .input-group
-                  %span.input-group-addon 
-                    = "#{@project.url}"
-                  %input#basic-url.form-control{:type => "text", 
-                                                :name=>"p_url_add"}/
-                  .input-group-btn
-                    %button.btn.btn-default.p_url_add{:type => "button"} +
+        - if @project.errors.any?
+          #error_explanation
+            %h2= "#{pluralize(@project.errors.count, "error")} prohibited this project from being saved:"
+            %ul
+              - @project.errors.full_messages.each do |msg|
+                %li= msg
 
+        .form-group.p_url_add_group
+          %label.control-label{:for => "p_field_add"} &nbsp;
+          .input-group
+            %span#basic-addon3.input-group-addon 
+              = "Название поля"
+            %input.form-control{:type => "text", 
+                                :name=>"field_add",
+                                :placeholder => "Пример: name"}/
+            .input-group-btn
+              %button.btn.btn-info.p_field_add{:type => "button"} +
 
-
-
-
-    = form_for @project, :method => "post" do |f|
-      =f.hidden_field :def,         :value => "edit"
-      =f.hidden_field :current_url, :value => "#{@urls[:result].first}"
-      =f.hidden_field :id,          :value => "#{@project.id}"
-
-      - if @project.errors.any?
-        #error_explanation
-          %h2= "#{pluralize(@project.errors.count, "error")} prohibited this project from being saved:"
-          %ul
-            - @project.errors.full_messages.each do |msg|
-              %li= msg
-
-      .form-group.p_url_add_group
-        %label.control-label{:for => "p_field_add"} &nbsp;
-        .input-group
-          %span#basic-addon3.input-group-addon 
-            = "Название поля"
-          %input.form-control{:type => "text", 
-                              :name=>"field_add",
-                              :placeholder => "Пример: name"}/
-          .input-group-btn
-            %button.btn.btn-info.p_field_add{:type => "button"} +
-
-      #fields-accordion.panel-group{"aria-multiselectable" => "true", :role => "tablist"}
+        #fields-accordion.panel-group.panel-group-lists
 
   .col-lg-7
-    #p_tabs
+    #p_tabs.panel
       / Nav tabs
       %ul.nav.nav-tabs{:role => "tablist"}
         %li.active{:role => "presentation"}
@@ -92,10 +69,12 @@
 
         #t-code.tab-pane{:role => "tabpanel"}
           %h3
-          -formatter = Rouge::Formatters::HTML.new
-          -lexer = Rouge::Lexers::HTML.new
+
+          -formatter = Rouge::Formatters::HTML.new()
+          -h_formatter = Rouge::Formatters::HTMLPygments.new(formatter, 'highlight')
+          -lexer = Rouge::Lexers::HTML.new()
           = preserve do
-            = raw formatter.format(lexer.lex(@html))
+            = raw h_formatter.format(lexer.lex(@html))
         #t-result.tab-pane{:role => "tabpanel"}
           %h3
           #pre

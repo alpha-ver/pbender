@@ -16,4 +16,7 @@ class PageController < ApplicationController
 
   def manual
   end
+
+  def test
+  end
 end
