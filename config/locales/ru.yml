@@ -1,0 +1,16 @@
+ru:
+  email: Почта
+  username: Логин
+  password: Пароль
+  remember_me: Запомнить меня
+
+  about: О сервисе
+  manual: Инструкции
+  plugins: Плагины
+  support: Поддержка
+  projects: Проекты
+  sign_in: Войти
+  login: Войти
+  profile: Профиль
+  plugin: Плагины 
+

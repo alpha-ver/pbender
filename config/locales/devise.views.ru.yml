@@ -54,8 +54,13 @@ ru:
         are_you_sure: "Вы уверены?"
         cancel_my_account: "Удалить учетную запись"
         leave_blank_if_you_don_t_want_to_change_it: "оставьте поле пустым, если не хотите ничего менять"
-        title: "Редактировать \"%{resource}\""
+        title: "Редактировать учетную запись"
         we_need_your_current_password_to_confirm_your_changes: "введите текущий пароль для подтверждения изменений"
+        email: "Почта"
+        password: "Пароль"
+        password_confirmation: "Подтверждение пароля"
+        current_password: "Текущий пароль"
+        update: "Обновить"
       new:
         sign_up: "Регистрация"
       destroyed: Ваш аккаунт успешно удален.
@@ -71,6 +76,9 @@ ru:
       already_signed_out: Вы уже вышли из аккаунта
       new:
         sign_in: "Войти"
+        remember_me: "Запомнить меня"
+        email: "Почта"
+        password: "Пароль"
     shared:
       links:
         didn_t_receive_confirmation_instructions: "Не получили подтверждение?"
@@ -86,13 +94,29 @@ ru:
       send_paranoid_instructions: Если Ваш аккаунт существует, в течении нескольких минут Вам на почту будет выслана инструкция по разблокировке аккаунта
       unlocked: Ваш аккаунт успешно разблокирован. Войдите чтобы продолжить
   errors:
+    format: "%{message}"
     messages:
       already_confirmed: Уже подтвержден, попробуйте войти
       confirmation_period_expired: "Должен был быть подтвержден в течении %{period}, запросите заново"
       expired: Истек, запросите заново
       not_found: Не найден
       not_locked: Не был заблокирован
+      not_saved: Ошибка создания учетной записи
   activerecord:
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              taken: Пользователь с такой почтой уже существует
+              invalid: Укажите другой почтовый ящик
+            password:
+              blank: Пароль не может быть пустой
+              too_short:  Пароль слишком короткий
+            password_confirmation:
+              confirmation: Пароли не совпадают
+            current_password:
+              blank: Укажите свой текущий пароль
     attributes:
       user:
         current_sign_in_at: Вход выполнен в

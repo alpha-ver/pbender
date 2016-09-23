@@ -118,18 +118,16 @@ class P
   end
 
   def get_highlight()
-    formatter = Rouge::Formatters::HTML.new
-    lexer     = Rouge::Lexers::HTML.new
-    formatter.format(lexer.lex(get_raw))
+    formatter = Rouge::Formatters::HTML.new()
+    h_formatter = Rouge::Formatters::HTMLPygments.new(formatter, 'highlight')
+    lexer = Rouge::Lexers::HTML.new()
+    h_formatter.format(lexer.lex(get_raw))
   end
 
   def get_result_field(field)
     ren = nil
     r   = xpath(field[:setting]['xpath'])
     if r[:success] && !r[:result].blank?
-      formatter = Rouge::Formatters::HTML.new()
-      h_formatter = Rouge::Formatters::HTMLPygments.new(formatter, 'highlight')
-      lexer = Rouge::Lexers::HTML.new()
       reh       = nil
       ####
       case field['otype']

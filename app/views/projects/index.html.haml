@@ -1,18 +1,21 @@
-%h1 Listing projects
+%h1 Список сайтов
 
 %table.table
   %thead
     %tr
       %th{:width => '40px'}
-      %th Name
-      %th Url
-      %th Status
-      %th url all
-      %th url parse
-      %th url skip
+      %th Имя
+      %th URL
+      %th Статус
+      %th 
+        все
+        \/
+        спарсенные
+        \/
+        пропущенные
 
+      %th{:width => '65px'}
       %th{:width => '96px'}
-      %th{:width => '124px'}
 
   %tbody
     -last_group=nil
@@ -20,7 +23,7 @@
       -if last_group != project.group
         -last_group = project.group
         %tr.info
-          %th{:colspan => 8}
+          %th{:colspan => 9}
             -if project.group.blank?
               &nbsp;
             -else
@@ -31,15 +34,17 @@
           %button.btn.btn-default.btn-xs{:type => "button", :disabled=>false}
             %span.glyphicon.glyphicon-refresh{"aria-hidden" => "true"}
 
-        %td= project.name
+        %td
+          = link_to project.name, project
         %td= project.url
         %td= project.status
-        %td= project.urls.count
-        %td= project.urls.where(:parse => true, :skip => false).count
-        %td= project.urls.where(:parse => true, :skip => true).count
         %td
-          = link_to project, :class=> 'btn btn-default btn-xs' do
-            %span.glyphicon.glyphicon-list-alt{"aria-hidden" => "true"}
+          = project.urls.count
+          \/
+          = project.urls.where(:parse => true, :skip => false).count
+          \/
+          = project.urls.where(:parse => true, :skip => true).count
+        %td
           = link_to edit_project_path(project), :class=> 'btn btn-default btn-xs' do 
             %span.glyphicon.glyphicon-edit{"aria-hidden" => "true"}
           = link_to project, :class=> 'btn btn-default btn-xs', :method => :delete, :data => { :confirm => 'Are you sure?' } do
@@ -51,8 +56,6 @@
               %span.glyphicon.glyphicon-calendar{"aria-hidden" => "true"}
             %button.btn.btn-default.btn-xs{:type => "button", :id=>"newtask_#{project.id}", :disabled=>false}
               %span.glyphicon.glyphicon-play{"aria-hidden" => "true"}
-            %button.btn.btn-default.btn-xs{:type => "button", :id=>"updtask_#{project.id}", :disabled=>false}
-              %span.glyphicon.glyphicon-repeat{"aria-hidden" => "true"}
             %button.btn.btn-default.btn-xs{:type => "button", :id=>"stop_#{project.id}", :disabled=>false}
               %span.glyphicon.glyphicon-stop{"aria-hidden" => "true"}      
 

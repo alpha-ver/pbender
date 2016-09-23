@@ -109,26 +109,26 @@ add_accordion_field=(v) ->
         "<div class=\"panel-body\">",
           "<div class=\"checkbox\">",
             "<label>",
-              "<input type=\"checkbox\" name=\"fieldOption_unique_#{v['name']}\" #{get_checkbox(v['unique'])}> Уникальный",
+              "<input type=\"checkbox\" name=\"fieldOption_unique_#{v['name']}\" #{get_checkbox(v['unique'])} class=\"icheck\" data-skin=\"square\" data-color=\"green\"> Уникальный",
             "</label>",
 
             "<label>",
-              "<input type=\"checkbox\" name=\"fieldOption_required_#{v['name']}\" #{get_checkbox(v['required'])}> Обязательный",
+              "<input type=\"checkbox\" name=\"fieldOption_required_#{v['name']}\" #{get_checkbox(v['required'])} class=\"icheck\" data-skin=\"square\" data-color=\"green\"> Обязательный",
             "</label>"
 
             "<label>",
-              "<input type=\"checkbox\" #{get_disabled(v['ok'])} name=\"fieldOption_enabled_#{v['name']}\" #{get_checkbox(v['enabled'])}> Включить",
+              "<input type=\"checkbox\" #{get_disabled(v['ok'])} name=\"fieldOption_enabled_#{v['name']}\" #{get_checkbox(v['enabled'])} class=\"icheck\" data-skin=\"square\" data-color=\"red\"> Включить",
             "</label>"
           "</div>",
 
-          "<div class=\"form-group\">", #has-success...
+          "<div class=\"form-group fg-xpath\">", #has-success...
             "<label class=\"control-label\" for=\"input_field_xpath_#{v['name']}\">",
               "&nbsp;",
             "</label>"
             "<div class=\"input-group\">",
               "<span class=\"input-group-addon\">Xpath</span>",
               "<input name=\"fieldOption_xpath_#{v['name']}\" type=\"text\" class=\"form-control\" id=\"input_field_xpath_#{v['name']}\" value=\"#{get_params(v['setting'], 'xpath')}\">",
-              "<select class=\"fieldOption_select show-tick\" name=\"fieldOption_otype_#{v['name']}\" data-width=\"95px\">",
+              "<select class=\"fieldOption_select show-tick\" name=\"fieldOption_otype_#{v['name']}\" data-width=\"140px\">",
                 "<optgroup label=\"Строка\">",
                   "<option value=\"text\">Текст</option>",
                   "<option value=\"html\">HTML</option>",
@@ -141,21 +141,20 @@ add_accordion_field=(v) ->
               "</select>",
             "</div>",
           "</div>"       
-          "<div id=\"fieldInput_attr_#{v['name']}\">",
+          "<div id=\"fieldInput_attr_#{v['name']}\" class=\"fg-attr\">",
           "</div>",
 
-          "<div class=\"form-group\">",           
+          "<div class=\"form-group fg-regex\">",           
             "<div class=\"input-group\">",
-              "<span class=\"input-group-addon\">Регулярка</span>",
+              "<span class=\"input-group-addon\">Regex</span>",
               "<input name=\"fieldOption_regex_#{v['name']}\" type=\"text\" class=\"form-control\" id=\"input_field_regex_#{v['name']}\" value=\"#{get_params(v['setting'], 'regex')}\">",
             "</div>",
           "</div>",
 
           "<div class=\"checkbox\">",
             "<label>",
-              "<input type=\"checkbox\" name=\"fieldOption_download_#{v['name']}\" #{dow}> Скачать",
+              "<input type=\"checkbox\" name=\"fieldOption_download_#{v['name']}\" #{dow} class=\"icheck\" data-skin=\"square\" data-color=\"green\"> Скачать",
             "</label>",
-
           "</div>",
 
           "<div class=\"btn-group pull-right\">",
@@ -181,7 +180,7 @@ add_accordion_field=(v) ->
       html = [
         "<div class=\"form-group\">",           
           "<div class=\"input-group\">",
-            "<span class=\"input-group-addon\">Атрибут</span>",
+            "<span class=\"input-group-addon\">Attr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>",
             "<input name=\"fieldOption_attr_#{v['name']}\" type=\"text\" class=\"form-control\" id=\"input_field_attr_#{v['name']}\" value=\"#{get_params(v['setting'], 'attr')}\">",
           "</div>",
         "</div>"
@@ -189,18 +188,33 @@ add_accordion_field=(v) ->
       $("#fieldInput_attr_#{v['name']}").html(html)
     else
       $("#fieldInput_attr_#{v['name']}").html('')
+
+#icheck
+icheck = ->
+  if $('.icheck').length > 0
+    $('.icheck').each ->
+      $el = $(this)
+      skin = if $el.attr('data-skin') != undefined then '_' + $el.attr('data-skin') else 'square'
+      color = if $el.attr('data-color') != undefined then '-' + $el.attr('data-color') else 'green'
+      opt = 
+        checkboxClass: 'icheckbox' + skin + color
+        radioClass: 'iradio' + skin + color
+      $el.iCheck opt
+      return
+  return
 #################################################
 
 $ -> 
   $(document).ready ->
     c 'document_ready', 'event'
+    icheck()
 
     asw=$('#affix_sidebar').width()
     $('#affix_sidebar').width(asw)
 
     $('#affix_sidebar').affix(
       offset:
-        top: 195
+        top: 153
     )
 
     #autoloading AJAX
@@ -216,6 +230,7 @@ $ ->
               $.each xhr['fields'], (i,v) ->
                 add_accordion_field(v)
               #field_affix()
+              icheck()
             else
               #тут дизайн что нет не хуя
           else
@@ -268,7 +283,7 @@ $ ->
       if url != newurl
         c "🔗 #{this['hash']}", "event"
         $("#project_current_url").val(newurl)
-        $("h1.title_current_url > small > span").html(newurl)
+        $("h3.title_current_url > small").html(newurl)
         $("a.p_url_change[href='##{url}']").parent().removeClass('active')
         $(this).parent().addClass('active')
         ####ajax
@@ -328,6 +343,7 @@ $ ->
                 add:     true )
               #$('#fields-accordion').collapse()
               #field_affix()
+              icheck()
             else
               $('.p_url_add_group').addClass('has-error')
               $('.p_url_add_group > label').html(xhr['message'])
@@ -361,9 +377,9 @@ $ ->
       value = $("select[name='#{this.name}']").find(":selected").val()
       if value == "attr" || value == "array_attr"
         html = [
-          "<div class=\"form-group\">",           
+          "<div class=\"form-group fg-attr\">",           
             "<div class=\"input-group\">",
-              "<span class=\"input-group-addon\">Атрибут</span>",
+              "<span class=\"input-group-addon\">Attr</span>",
               "<input name=\"fieldOption_attr_#{name}\" type=\"text\" class=\"form-control\" id=\"input_field_attr_#{name}\">",
             "</div>",
           "</div>"
