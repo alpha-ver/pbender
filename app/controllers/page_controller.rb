@@ -11,10 +11,16 @@ class PageController < ApplicationController
   def plugins
   end
 
-  def projects
+  def sample
   end
 
   def manual
+  end
+
+  def support_the_project
+  end
+
+  def contacts
   end
 
   def test

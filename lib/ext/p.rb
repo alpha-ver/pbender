@@ -129,13 +129,16 @@ class P
     r   = xpath(field[:setting]['xpath'])
     if r[:success] && !r[:result].blank?
       reh       = nil
+      formatter = Rouge::Formatters::HTML.new()
+      h_formatter = Rouge::Formatters::HTMLPygments.new(formatter, 'highlight')
+      lexer = Rouge::Lexers::HTML.new()
       ####
       case field['otype']
       when 'text'
         ren=r[:result].text
       when 'html'
         ren=r[:result].to_s
-        reh=formatter.format(lexer.lex(ren))
+        reh=h_formatter.format(lexer.lex(ren))
       when 'attr'
         ren=r[:result].attr(field[:setting]['attr']).to_s
       when 'array'

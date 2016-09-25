@@ -99,9 +99,9 @@ ru:
       already_confirmed: Уже подтвержден, попробуйте войти
       confirmation_period_expired: "Должен был быть подтвержден в течении %{period}, запросите заново"
       expired: Истек, запросите заново
-      not_found: Не найден
+      not_found: Пользователь не найден
       not_locked: Не был заблокирован
-      not_saved: Ошибка создания учетной записи
+      not_saved: Ошибка
   activerecord:
     errors:
       models:
@@ -110,6 +110,7 @@ ru:
             email:
               taken: Пользователь с такой почтой уже существует
               invalid: Укажите другой почтовый ящик
+              blank: Укажите свой почтовый ящик
             password:
               blank: Пароль не может быть пустой
               too_short:  Пароль слишком короткий

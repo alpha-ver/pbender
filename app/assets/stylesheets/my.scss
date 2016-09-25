@@ -205,7 +205,11 @@ small{
 
 
 .navbar-brand{
-  padding-top: 8px;
+  padding-top: 18px;
+
+  &:hover{
+    opacity: 0.9;
+  }
 }
 
   /*-- change navbar dropdown color --*/
@@ -221,7 +225,95 @@ small{
     padding: 4px 0 0 0;
   }
 
-  li > a:hover{
+  li > a.active{
     background-color: #48CFAD;
+
+    &:hover{
+      background-color:#48CFAD;
+      color: #fff;
+      cursor: default;
+    }
+  }
+
+
+  li > a:hover{
+    color: #333;
+    background-color: #37BC9B;
   }
 }
+
+.content{
+  padding-bottom: 45px
+}
+
+.for-title{
+  margin-top:44px
+}
+
+
+a{
+  color: #37BC9B;
+}
+
+a:hover{
+  color: #48CFAD;
+}
+
+
+.footer{
+  
+  dt.nav-title{
+    text-transform: uppercase;
+  }
+
+  a.active{
+    opacity: 0.5;
+    left: -20px;
+    position: relative;
+    
+    &:before{
+      position: relative;
+      content: "➡";
+      display: inline-block;
+      width: 20px;
+    }
+
+    &:hover{
+      color: #AAB2BD;
+      cursor: default;
+    }
+
+  }
+
+
+  .footer-logo{
+    a.active{
+      color: #37BC9B;
+      opacity: 1;      
+      &:hover{
+      opacity: 0.9;
+      color: none;
+      cursor: default;
+      }
+
+      &:before{
+        content: "";
+        width: 0px;
+      }
+
+    }
+  }
+}
+
+
+.btn-1{
+  background: none;
+  color: #37BC9B;
+
+  &:hover{
+  background-color: #434A54;
+  border-color: #fff;  
+  color: #fff;
+
+  }
+} 

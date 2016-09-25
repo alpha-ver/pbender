@@ -98,7 +98,14 @@ class ApiController < ApplicationController
       if !@current_project.pid.blank? && Process.exists?(@current_project.pid)
         success = false
       else
-        @current_project.tasking  = true
+        if params[:project][:enabled] == "on"
+          @current_project.tasking  = true
+          #todo fix 22..4444
+          @current_project.interval = params[:project][:interval]
+        else
+          @current_project.tasking = false
+        end 
+
         @current_project.start_at = Time.now
         success = @current_project.save 
       end
@@ -113,7 +120,7 @@ class ApiController < ApplicationController
       Process.kill("HUP", @current_project.pid)
     end
 
-    render :json => {:success => success, :params => params}
+    render :json => {:success => success, :params => params, :project => @current_project}
   end
 
 

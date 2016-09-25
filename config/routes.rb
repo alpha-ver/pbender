@@ -6,8 +6,10 @@ Rails.application.routes.draw do
   get 'page/about'
   get 'page/support'
   get 'page/plugins'
-  get 'page/projects'
+  get 'page/sample'
   get 'page/manual'
+  get 'page/support_the_project'
+  get 'page/contacts'
   get 'page/test'
 
   post   'api/add_field'

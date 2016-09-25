@@ -208,6 +208,7 @@ $ ->
   $(document).ready ->
     c 'document_ready', 'event'
     icheck()
+    $('[data-toggle="tooltip"]').tooltip()
 
     asw=$('#affix_sidebar').width()
     $('#affix_sidebar').width(asw)
@@ -505,6 +506,9 @@ $ ->
       c "Button submit #{this.id}", "event"
       $('body').addClass('loading')
       name = this.id.split("_")[2]
+
+
+
       ######
       $.ajax
         type: "POST"
@@ -525,7 +529,6 @@ $ ->
               only_path_field: $("input[name='setting\[only_path_field\]']").val()
               plugin:
                 id: $("select.OutPlugin_select").find(":selected").val()
-
 
         success: (xhr) ->
           clear_panel($("#PanelSettingOut"))         
@@ -574,3 +577,52 @@ $ ->
           c "AJAX error #{xhr['status']} /api/controll_task", "error"
           console.log xhr
           $('body').removeClass('loading')
+
+
+    #task interval
+    $('#modal').on 'show.bs.modal', (event) ->
+      button   = $(event.relatedTarget)
+      method   = button.data('method')
+      id       = button.data('id') 
+      enable   = button.data('tasking')          
+      interval = button.data('interval')
+      title    = button.data('title')      
+      c "modal event #{method}(id-#{id}, on-#{enable}, interval-#{interval}, title-#{title} )", "event"
+      $('#project_id').val(id)
+      html = [
+        "<input value=\"tasking\" name=\"project[status]\" id=\"project_status\" type=\"hidden\">",
+        "<label>",
+          "<input type=\"checkbox\" name=\"project[enabled]\" #{get_checkbox(enable)} class=\"icheck\" data-skin=\"square\" data-color=\"green\"> Включить",
+        "</label>"
+        "<div class=\"form-group fg-interval\">",           
+          "<input name=\"project[interval]\" type=\"text\" class=\"form-control\" id=\"input_field_interval\" value=\"#{interval}\" type=\"text\" data-slider-min=\"0\" data-slider-max=\"20\" data-slider-step=\"1\" data-slider-value=\"#{interval}\"/>" 
+        "</div>"
+      ].join('')
+
+
+      $(this).find('.modal-title').text "Планировщик задачи для — #{title}"
+      $(this).find('.modal-body').html(html)
+      icheck()
+      return
+
+    $('#modal-project').submit (e) ->
+      c "Button submit #{this.id}", "event"
+      $('body').addClass('loading')
+
+      ######
+      $.ajax
+        type: "POST"
+        url: '/api/controll_task'
+        data: $('#modal-project').serialize()
+        success: (xhr) ->
+          console.log xhr
+          if xhr['succes']
+          
+          else
+            
+          $('body').removeClass('loading')
+        error: (xhr) -> 
+          c "AJAX error #{xhr['status']} /api/controll_task", "error"
+          console.log xhr
+          $('body').removeClass('loading')
+      return false

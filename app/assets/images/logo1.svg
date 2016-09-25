@@ -52,15 +52,15 @@
     <filter
        inkscape:collect="always"
        style="color-interpolation-filters:sRGB"
-       id="filter5593"
-       x="-0.075463021"
-       width="1.150926"
-       y="-0.014269038"
-       height="1.0285381">
+       id="filter5621"
+       x="-0.060370417"
+       width="1.1207408"
+       y="-0.01141523"
+       height="1.0228305">
       <feGaussianBlur
          inkscape:collect="always"
-         stdDeviation="0.23461985"
-         id="feGaussianBlur5595" />
+         stdDeviation="0.18769588"
+         id="feGaussianBlur5623" />
     </filter>
   </defs>
   <sodipodi:namedview
@@ -104,7 +104,7 @@
      id="layer1"
      transform="translate(0,-1002.3622)">
     <path
-       style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.53823066;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter5593)"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.53823066;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter5621)"
        d="m 25.05,1007.8811 a 3.7308845,3.4529048 0 0 0 -3.730884,3.4529 3.7308845,3.4529048 0 0 0 2.746114,3.3296 l -2.746114,32.6797 7.461769,0 -2.746115,-32.683 a 3.7308845,3.4529048 0 0 0 2.746115,-3.3263 3.7308845,3.4529048 0 0 0 -3.730885,-3.4529 z"
        id="rect4136"
        inkscape:connector-curvature="0" />

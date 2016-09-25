@@ -7,10 +7,25 @@ ru:
   about: О сервисе
   manual: Инструкции
   plugins: Плагины
+  setting_plugin: Настройка плагинов
   support: Поддержка
   projects: Проекты
+  sample:  Примеры
   sign_in: Войти
   login: Войти
+  sign_up: Регистрация
+  logout: Выход
   profile: Профиль
-  plugin: Плагины 
+  plugin: Плагины
+  contacts: Контакты
+  new_project: Новый сайт
+  forgot_your_password: Забыли пароль
+  didn_t_receive_confirmation_instructions: Повторить активацию 
+  support_the_project: Поддержать проект
 
+  status:
+    error: "Ошибка"
+    new: "Новый"
+    new_task: "Новая задача"
+    finish: "Завершенна"
+    min: "мин."
