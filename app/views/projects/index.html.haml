@@ -47,12 +47,13 @@
         %td= link_to project.name, project
         %td= project.url
         %td= t("status.#{project.status}")
-        %td
+        %td.tasking
           -if project.tasking
-            = project.interval
-            = t('min')
+            -if !project.interval.blank?
+              = project.interval / 60
+              = t('min')
           -else
-            =t('off')
+            =t('0ff')
         %td
           = project.urls.count
           \/
@@ -73,7 +74,7 @@
 
 
 .modal.fade{:role => "dialog", :tabindex => "-1", :id=>"modal"}
-  .modal-dialog{:role => "document"}
+  .modal-dialog.modal-lg{:role => "document"}
     =form_for 'project', :url=>"/api/controll_task", :html=>{:id=>"modal-project"} do |f|
       =f.hidden_field :id, :value => ''
       .modal-content

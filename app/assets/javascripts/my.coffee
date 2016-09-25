@@ -189,6 +189,15 @@ add_accordion_field=(v) ->
     else
       $("#fieldInput_attr_#{v['name']}").html('')
 
+#slider event
+slider_ed=(t) ->
+  console.log t 
+  checked = $(t).is(':checked')
+  if checked
+    $('#input_field_interval').slider("enable");
+  else
+    $('#input_field_interval').slider("disable");
+
 #icheck
 icheck = ->
   if $('.icheck').length > 0
@@ -201,6 +210,10 @@ icheck = ->
         radioClass: 'iradio' + skin + color
       $el.iCheck opt
       return
+
+    $('.icheck').on 'ifToggled', (event) ->
+      slider_ed(this)
+
   return
 #################################################
 
@@ -585,7 +598,10 @@ $ ->
       method   = button.data('method')
       id       = button.data('id') 
       enable   = button.data('tasking')          
-      interval = button.data('interval')
+      if button.data('interval') == undefined
+        interval = 30
+      else
+        interval = button.data('interval') / 60
       title    = button.data('title')      
       c "modal event #{method}(id-#{id}, on-#{enable}, interval-#{interval}, title-#{title} )", "event"
       $('#project_id').val(id)
@@ -595,19 +611,45 @@ $ ->
           "<input type=\"checkbox\" name=\"project[enabled]\" #{get_checkbox(enable)} class=\"icheck\" data-skin=\"square\" data-color=\"green\"> Включить",
         "</label>"
         "<div class=\"form-group fg-interval\">",           
-          "<input name=\"project[interval]\" type=\"text\" class=\"form-control\" id=\"input_field_interval\" value=\"#{interval}\" type=\"text\" data-slider-min=\"0\" data-slider-max=\"20\" data-slider-step=\"1\" data-slider-value=\"#{interval}\"/>" 
+          "<input name=\"project[interval]\" type=\"text\" class=\"form-control\" id=\"input_field_interval\" value=\"#{interval}\" type=\"text\" data-provide=\"slider\" data-slider-min=\"30\" data-slider-max=\"1440\" data-slider-step=\"1\" data-slider-value=\"#{interval}\" data-slider-enabled=\"false\"/>" 
         "</div>"
       ].join('')
 
-
       $(this).find('.modal-title').text "Планировщик задачи для — #{title}"
       $(this).find('.modal-body').html(html)
+
+      $('#input_field_interval').slider formatter: (value) ->
+        if value < 60 
+          'Каждые ' + value + ' Минут'
+        else if value >= 60 && value < 1440
+          h = Math.floor(value / 60)
+          m = value % 60
+
+          if m == 0
+            mm = ""
+          else if m == 1
+            mm = "и #{m} минута"
+          else if m > 1 && m < 5
+            mm = "и #{m} минуты"
+          else 
+            mm = "и #{m} минут"
+
+          if h == 1
+            "Каждый час #{mm}"
+          else if h > 1 && h < 5 
+            "Каждые #{h} часа #{mm}"
+          else
+            "Каждые #{h} часов #{mm}"
+        else if value == 1440
+          'Каждые сутки'
+
       icheck()
+      slider_ed("input[name='project\[enabled\]']")
       return
 
     $('#modal-project').submit (e) ->
       c "Button submit #{this.id}", "event"
-      $('body').addClass('loading')
+      $(this).prop( "disabled", true )
 
       ######
       $.ajax
@@ -616,8 +658,21 @@ $ ->
         data: $('#modal-project').serialize()
         success: (xhr) ->
           console.log xhr
-          if xhr['succes']
-          
+          if xhr['success']
+            id       = xhr['project']['id']
+            interval = xhr['project']['interval']
+            tasking  = xhr['project']['tasking']
+
+            if tasking
+              $("#trp_#{id} td.tasking").html("#{interval / 60} мин.")
+            else
+              $("#trp_#{id} td.tasking").html("Выкл.")
+
+            $("#tasking_#{id}").data("interval", interval)
+            $("#tasking_#{id}").data("tasking",  tasking)
+
+            $('#modal').modal('hide')
+            $(this).prop( "disabled", false )
           else
             
           $('body').removeClass('loading')

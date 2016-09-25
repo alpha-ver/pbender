@@ -53,6 +53,7 @@ gem 'web-console', '~> 2.0'
 
 gem 'bootflat-rails', '~> 0.1.8'
 gem 'icheck-rails'
+gem 'bootstrap-slider-rails'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

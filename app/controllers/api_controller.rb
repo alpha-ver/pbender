@@ -100,8 +100,15 @@ class ApiController < ApplicationController
       else
         if params[:project][:enabled] == "on"
           @current_project.tasking  = true
-          #todo fix 22..4444
-          @current_project.interval = params[:project][:interval]
+
+          p params[:project][:interval].to_i
+
+          if params[:project][:interval].blank? || params[:project][:interval].to_i < 30
+            interval = 1800
+          else
+            interval = params[:project][:interval].to_i * 60
+          end
+          @current_project.interval = interval
         else
           @current_project.tasking = false
         end 

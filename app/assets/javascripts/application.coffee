@@ -9,4 +9,5 @@
 #= require bootstrap/tooltip
 #= require icheck
 #= require bootstrap-select/bootstrap-select
+#= require bootstrap-slider
 #= require my
