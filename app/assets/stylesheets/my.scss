@@ -322,3 +322,138 @@ a:hover{
 .fg-interval{
   padding-top: 30px
 }
+
+
+nav.paginate{
+  li.disabled > span{
+    color: #aaa;
+
+    &:hover{
+      color: #aaa;
+    }
+  }
+
+
+  li.active > span{
+    background-color: #37BC9B;
+    border-color: #37BC9B;
+
+    &:hover{
+      background-color: #37BC9B;
+      border-color: #48CFAD;
+    }
+  }
+
+  a:hover{
+    background-color: #434A54;
+  }
+}
+
+// for show 
+.show-project{
+  display: table;
+
+  .tab-content{
+    padding:10px;
+  }
+  
+  .row {
+    height: 100%;
+    display: table-row;
+  }
+
+  .table-col {
+    display: table-cell;
+    float: none;
+    vertical-align: top;
+  }
+  .table-col-right {
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  .for-status{
+    display:inline-block;
+    position: inherit;
+    font-size: 125%;
+    height: 30px;
+    color: #fff;
+    background-color: #434A54;
+    padding: 4px 15px 0 0;
+
+    &:before{
+      content: ''; 
+      left: -30px;
+      top: 0px;
+      position: absolute;
+      border: 15px solid transparent;
+      border-top: 15px solid #434A54;
+      border-bottom: 15px solid #434A54;
+      border-right: 15px solid #434A54;        
+    }
+
+    &:after{
+      content: ''; 
+      right: -30px;
+      top: 0px;
+      position: absolute;
+      border: 15px solid transparent;
+      border-left: 15px solid #434A54;
+    }
+
+    &#st_stop{
+
+    }
+
+    &#st_run{
+
+    }      
+
+    &#st_error{
+      
+    }
+
+  }
+}
+
+.dl-parsed{
+  dt{
+    margin-bottom:10px;
+    background-color: #434A54;
+    color: #fff;
+    //FOR mobile!
+    width: 180px;
+    text-align:left;
+    padding-left:7px;
+    display: table;
+
+    .name{
+      &:before{
+        content: ":"
+      }
+      display: table-cell;
+      width: 100%;
+
+    }
+    .icon{
+      display: table-cell;
+      cursor: pointer;
+      padding-right: 5px;
+    }
+  }
+
+  dd{
+    margin-bottom:10px;
+    border-left: solid 2px #434A54;
+    border-radius: 0 0 0 7px;
+    padding-left: 10px;
+    padding-bottom: 5px;
+  }
+
+  .dt-array{
+  }
+
+  li+li{
+    border-left: solid 1px #333;
+  }
+}

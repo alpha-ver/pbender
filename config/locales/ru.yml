@@ -24,10 +24,26 @@ ru:
   support_the_project: Поддержать проект
 
   status:
-    error: "Ошибка"
-    new: "Новый"
+    error:    "Ошибка"
+    new:      "Новый"
     new_task: "Новая задача"
-    finish: "Завершенна"
+    finish:   "Завершенна"
+    run:      "Выполняется"
+    stop:     "Остановленна"
   
   min: "Мин."
   0ff: "Выкл."
+  error: "Ошибка"
+  blank: "Пусто!"
+
+  urls_parsed: "Спарсенно"
+  urls_skipped: "Пропущенные"
+  urls_intask: "Не проверялись"
+  out_plugins: "Выгрузка"
+
+
+
+
+  will_paginate:
+    next_label: "Вперёд"
+    previous_label: "Назад"
