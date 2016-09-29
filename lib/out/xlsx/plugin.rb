@@ -15,8 +15,8 @@ class OutXlsx
   #cp   = current project (hash)
   #cpfs = current project fields (hash)
   def initialize(pa=nil, cp=nil, cpfs=nil)
-    @cp = cp
-    @cpfs = cpfs
+    @cp          = cp
+    @cpfs        = cpfs
     @plugin_name = 'xlsx'
   end
 
@@ -25,22 +25,72 @@ class OutXlsx
   end
 
   #for generated metod
-  def before_generate
-    @paths     = P.prepare_dir(@cp[:user_id], @cp[:id], @plugin_name)
-    @workbook  = RubyXL::Workbook.new
-    @worksheet = @workbook.add_worksheet(@cp[:name])
+  def before_generate(count=nil)
+    #Prepare workbook
+    @count                = count
+    @num                  = 0
+    @column_indexs        = {}
+
+    @paths                = P.prepare_dir(@cp[:user_id], @cp[:id], @plugin_name)
+    @workbook             = RubyXL::Workbook.new
+    @worksheet            = @workbook[0]
+    @worksheet.sheet_name = @cp[:name]
+
+    # Add top row -> add_cell(row_index = 0, column_index = 0, data = '', formula = nil, overwrite = true) ⇒ Object 
+    # add serwice row
+    @start_row = 1
+    # add service column
+    @worksheet.add_cell(0, 0, 'url')
+
+    @cpfs.each_with_index.map do |v,i|
+      @worksheet.add_cell(0, i + @start_row, v[1][:name])
+      @column_indexs[ v[0] ] = i + @start_row
+    end
+
+    @worksheet.change_row_fill(0, '333333') 
+    @worksheet.change_row_font_color(0, 'ffffff')    
     
-    #@worksheet.insert_row(@cpfs.map {|i| i[:name]})
   end
 
-  def generate(result)
-    #@worksheet.insert_row( 
-    #  result.map {|i| i[:result_text]} 
-    #)
+  def generate(url, result)
+    @num += 1
+
+    # add service column
+    @worksheet.add_cell(@num, 0, url[:url])
+
+    result.each_with_index.map do |v,i|
+      column = @column_indexs[ v[:field_id] ]
+      field  = @cpfs[ v[:field_id] ]
+
+      case field[:otype]
+      when "text"
+        value = v[:result_text]
+      when "html"
+        value = v[:result_text] 
+      when "attr"
+        value = v[:result_text] 
+      when "array"
+        value = v[:result_arr].join(', ') 
+      when "array_attr"
+        value = v[:result_arr].join(', ')
+      else
+        value = "-" 
+      end 
+
+
+      @worksheet.add_cell(@num, column, value)
+      progress = (( @num.to_f / @count ) * 100).to_i
+      P.update_progress(@cp[:id], progress)    
+  
+    end
+
   end
 
   def after_generate
-    @workbook.write("#{@paths[:full_path]}file.xlsx")
+    filename = "#{Time.now.to_i}.xlsx"
+    @workbook.write("#{@paths[:full_path]}#{filename}")
+
+    {:plugin_file_url =>  "#{@paths[:path]}#{filename}" }
   end
 
 end

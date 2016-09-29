@@ -167,23 +167,35 @@ class ApiController < ApplicationController
 
             #инициализация плагина
             plugin = eval(pp).new(
-              nil,
+              nil, #cetting ;(
               @current_project.serializable_hash.deep_symbolize_keys, 
-              @current_project.fields.all.map {|i| i.serializable_hash.deep_symbolize_keys}
+              #@current_project.fields.all.map {|i| i.serializable_hash.deep_symbolize_keys} -> github pff
+              Hash[
+                @current_project.fields.map {|i| 
+                  [
+                    i[:id], 
+                    i.serializable_hash(:except=>:id).deep_symbolize_keys
+                  ] 
+                }
+              ]
             )
+            #Поиск всех нормальны url 
+            urls = @current_project.urls.where(:parse=> true, :skip=> false)
+            #
 
-            plugin.before_generate()
+            plugin.before_generate(urls.count)
 
-            @current_project.urls.where(:parse=> true, :skip=> false).each do |url|
+            urls.each do |url|
+              url_h   = url.serializable_hash.deep_symbolize_keys
               results = url.results.map {|i| i.serializable_hash.deep_symbolize_keys}
-              plugin.generate(results)
+              plugin.generate(url_h, results)
             end
             
-            plugin.after_generate()
+            result = plugin.after_generate()
 
             #заканчиваем с плагинами
             pid = @current_project.pid
-            @current_project.result[:plugin_file_url] = "/out/github/1.xlsx"
+            @current_project.result = result
             @current_project.status = 'stopping_generate'
             @current_project.pid    = nil
             @current_project.save
