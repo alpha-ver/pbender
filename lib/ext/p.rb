@@ -101,8 +101,8 @@ class P
       urls.each do |url|
         #fo lo urls
         url.gsub!(/([\s]+)/, '')
-        
-        uri = URI.parse(url)
+
+        uri = URI.parse(URI.encode(url))
         if !uri.path.nil?
           if  uri.host.nil? &&  uri.path[0] == "/"
             if uri.query.nil? 

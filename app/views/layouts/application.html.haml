@@ -104,7 +104,9 @@
                     %dd.nav-item
                       = active_link_to t('setting_plugin'), plugins_path
                     %dd.nav-item
-                      = active_link_to t('profile'),  edit_user_registration_path
+                      = active_link_to t('files'), files_path    
+                    %dd.nav-item
+                      = active_link_to t('profile'),  edit_user_registration_path                  
                     %dd.nav-item
                       = link_to t('logout'),  destroy_user_session_path, :method=>:delete
                 -else

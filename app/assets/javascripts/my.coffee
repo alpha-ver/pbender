@@ -304,6 +304,12 @@ $ ->
           else
             c "AJAX error /api/get_fields", "error"
             console.log xhr['fields']
+
+          if $("input#setting_only_path_field").val() == ""
+            $('#CbOnlyPath b').html("главной")
+          else
+            $('#CbOnlyPath b').html( $("input#setting_only_path_field").val() )
+            
           $('body').removeClass('loading')
         error: (xhr) ->
           c "AJAX error #{xhr['status']} /api/get_fields", "error"

@@ -1,17 +1,18 @@
-%p#notice= notice
+%h1 Шаблон настройки модуля
 
-%p
-  %b Name:
-  = @plugin.name
-%p
-  %b Setting:
-  = @plugin.setting
-%p
-  %b Class name:
-  = @plugin.class_name
-%p
-  %b User:
-  = @plugin.user_id
+
+%dl.dl-horizontal
+  %dt Название
+  %dd= @plugin.name
+  
+  %dt Модуль
+  %dd= eval(@plugin.class_name).info[:name][I18n.locale]
+
+  - @plugin.setting.each do |s|
+    %dt= s[0]
+    %dd= s[1]
+
+
 
 
 = link_to 'Edit', edit_plugin_path(@plugin)

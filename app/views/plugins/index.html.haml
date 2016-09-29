@@ -1,23 +1,33 @@
-%h1 Listing plugins
+.container
+  .row
+    .col-lg-9
+      %h1 Настройка модулей
+    .col-lg-3.for-title
+      = link_to t('new_setting_plugin'), new_plugin_path, :class=>"btn btn-success btn-sm btn-block"
+
+
+
 
 %table.table
   %thead
     %tr
-      %th Name
-      %th Class name
-      %th
-      %th
-      %th
+      %th=t 'name'
+      %th=t 'module'
+      %th{:width => '68px'}
 
   %tbody
     - @plugins.each do |plugin|
       %tr{:class=> plugin.test ? 'success' : 'warning'}
-        %td= plugin.name
-        %td= plugin.class_name
-        %td= link_to 'Show', plugin
-        %td= link_to 'Edit', edit_plugin_path(plugin)
-        %td= link_to 'Destroy', plugin, :method => :delete, :data => { :confirm => 'Are you sure?' }
+        %td
+          = link_to plugin do
+            = plugin.name
 
-%br
+        %td
+          - p = eval(plugin.class_name).info
+          = p[:name][I18n.locale]
 
-= link_to 'New Plugin', new_plugin_path
+        %td
+          = link_to edit_plugin_path(plugin), :class=> 'btn btn-xs btn-1' do
+            %span.glyphicon.glyphicon-edit{"aria-hidden" => "true"}
+          = link_to plugin, :class=> 'btn btn-xs btn-1', :method => :delete, :data => { :confirm => 'Are you sure?' } do 
+            %span.glyphicon.glyphicon-trash{"aria-hidden" => "true"}

@@ -7,6 +7,7 @@ class PluginsController < ApplicationController
   # GET /plugins.json
   def index
     @plugins = current_user.plugins.all
+
   end
 
   # GET /plugins/1
@@ -17,7 +18,13 @@ class PluginsController < ApplicationController
   # GET /plugins/new
   def new
     @plugin = Plugin.new
-    @out_plugins = list_plugins.map { |e| [info_plugin(e)[:name][I18n.locale], e ] }
+    @out_plugins = list_plugins.map { |e| 
+      if !info_plugin(e)[:setting].nil?
+      [
+        info_plugin(e)[:name][I18n.locale], e 
+      ] 
+      end
+    }.compact
   end
 
   # GET /plugins/1/edit

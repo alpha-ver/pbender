@@ -200,8 +200,8 @@ class ApiController < ApplicationController
             @current_project.pid    = nil
             @current_project.save
            
-            Process.detach(pid)
-            exit(pid) # Плодим зомби! Разобраться бы.
+          
+            # Плодим зомби! Разобраться бы.
           end
 
           @current_project.pid = fork_pid

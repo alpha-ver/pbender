@@ -16,7 +16,7 @@ ru:
   sign_up: Регистрация
   logout: Выход
   profile: Профиль
-  plugin: Плагины
+  plugin: Плагины α
   contacts: Контакты
   new_project: Новый сайт
   forgot_your_password: Забыли пароль
@@ -39,6 +39,10 @@ ru:
   error: "Ошибка"
   blank: "Пусто!"
   files: Файлы
+  not_use_out: Не использовать плагин
+  name: Название 
+  module: модуль
+  new_setting_plugin: Добавить шаблон настроек
 
   urls_parsed: "Спарсенно"
   urls_skipped: "Пропущенные"

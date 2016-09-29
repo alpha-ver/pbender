@@ -115,7 +115,7 @@
                       = s.text_field :only_path_field,  :placeholder => "example: /news", 
                                                         :class       => "form-control",
                                                         :value       => @project.setting.nil? ? '' : @project.setting["only_path_field"]
-                .form-group
+                .form-group.hide
                   %label
                     =s.radio_button :option_url, "range", 
                                     :type  => "radio",
@@ -130,7 +130,7 @@
                                                 :disabled    => "disabled",
                                                 :value       => @project.setting.nil? ? '' : @project.setting["range_str"]
                                
-                .form-group                              
+                .form-group.hide                              
                   %label
                     =s.radio_button :option_url, "list", 
                                     :type => "radio",

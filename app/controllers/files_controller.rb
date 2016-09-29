@@ -6,7 +6,18 @@ class FilesController < ApplicationController
   # GET /files
   # GET /files.json
   def index
-    @files = Dir["#{Rails.root}/public/out/#{current_user.id}/*/*"]
+    @pfs = []
+    list_plugins.each do |i|
+      pi = eval(i).info
+      if !pi[:file_dir].nil?
+        @pfs << {
+          :plugin => pi,
+          :files  => Dir["#{Rails.root}/public/out/#{current_user.id}/*/#{pi[:file_dir]}/*"]
+        }
+      end
+    end
+
+
   end
 
   # GET /files/1
@@ -71,5 +82,11 @@ class FilesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def file_params
       params.fetch(:file, {})
+    end
+
+    def list_plugins
+      Dir['lib/out/*/plugin.rb'].map { |i|
+        "Out#{i.split('/')[-2].gsub('.rb', '').capitalize}"
+      } 
     end
 end

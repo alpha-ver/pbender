@@ -203,9 +203,13 @@ small{
   color:#434A54!important;
 }
 
+.navbar{
+  border-bottom: solid 4px #48CFAD;
+}
 
 .navbar-brand{
   padding-top: 18px;
+
 
   &:hover{
     opacity: 0.9;

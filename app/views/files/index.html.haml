@@ -1,16 +1,11 @@
 %h1 Список файлов
-
-%table.table
-  %thead
-    %tr
-      %th
-      %th
-      %th
-
-  %tbody
-    - @files.each do |file|
-      %tr
-        %td= link_to 'Show', file
-        %td= link_to 'Edit', edit_file_path(file)
-        %td= link_to 'Destroy', file, :method => :delete, :data => { :confirm => 'Are you sure?' }
-
+- @pfs.each do |pf|
+  %h3= pf[:plugin][:name][I18n.locale]
+  %p= pf[:plugin][:description][I18n.locale]
+  %ul
+    - pf[:files].each do |file|
+      -path = file.gsub("#{Rails.root}/public", "")
+      %li
+        %a{:href=> path} 
+          =fa_icon pf[:plugin][:fa_icon]
+          =path.split('/')[-1]

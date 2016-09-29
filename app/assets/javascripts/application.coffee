@@ -7,6 +7,7 @@
 #= require bootstrap/alert
 #= require bootstrap/affix
 #= require bootstrap/tooltip
+#= require bootstrap/carousel
 #= require icheck
 #= require bootstrap-select/bootstrap-select
 #= require bootstrap-slider
