@@ -35,10 +35,10 @@
 
       .panel
         %ul.nav.nav-tabs
-          = active_link_to t('urls_parsed'),  project_path,                   :wrap_tag => :li, :active => @type == "parsed"  ? true : false
-          = active_link_to t('urls_skipped'), project_path(:type=>'skipped'), :wrap_tag => :li, :active => @type == "skipped" ? true : false
-          = active_link_to t('urls_intask'),  project_path(:type=>'intask' ), :wrap_tag => :li, :active => @type == "intask"  ? true : false
-          = active_link_to t('out_plugins'),  project_path(:type=>'plugins'), :wrap_tag => :li, :active => @type == "plugins" ? true : false
+          = active_link_to t('urls_parsed'),       project_path,                   :wrap_tag => :li, :active => @type == "parsed"  ? true : false
+          = active_link_to t('urls_skipped'),      project_path(:type=>'skipped'), :wrap_tag => :li, :active => @type == "skipped" ? true : false
+          = active_link_to t('urls_intask'),       project_path(:type=>'intask' ), :wrap_tag => :li, :active => @type == "intask"  ? true : false
+          = active_link_to t('generate_plugins'),  project_path(:type=>'plugins'), :wrap_tag => :li, :active => @type == "plugins" ? true : false
 
         .tab-content
           .tab-pane.active.tab-padding
@@ -135,6 +135,38 @@
               %nav.paginate.text-center{:aria => {:label=>"Urls navigation"}}
                 = will_paginate @urls, renderer: BootstrapPagination::Rails     
             -when 'plugins'
-              to_do
+              %h3 Выгрузка текущих данных из проекта 
+              %p Этот тип выгрузки можно использовать для генерации документов, затрагивает только те данные, которые есть в базе. Для организации "живой" выгрузки(сразу отправляет данные в модуль выгрузки после парсинга нового url) используйте настройки проекта, но прежде вы должны настроить модуль на странице настройки плагинов.
+              
+              %h4 Доступные модули выгрузки 
+
+              .row
+                .col-lg-7
+                  %h5 Генераторы 
+                  %ul.ul-generate.list-group
+                    -P.list_plugins(:generate).each do |p|
+                      %li.module.list-group-item{:data=> { :plugin => p[0] }}
+                        = p[1][:name][I18n.locale]
+
+                .col-lg-5
+                  %h5
+                    Живая выгрузка 
+                    =fa_icon("link")
+                  %ul.ul-live.list-group
+                    -P.list_plugins(:live).each do |p|
+                      %li.list-group-item= p[1][:name][I18n.locale]
+
+              .row
+                .col-lg-12#plugin_out_form.hide
+                  %h4 Настройка модуля
+                  .for-alert
+                  =form_for 'project', :html =>{:id=>"LiveOForm"} do |f|
+                    =f.hidden_field :id, :value => params[:id]
+                    .for-ajax
+
+
+
+
+
             -else
               %h4 Такого быть не должно

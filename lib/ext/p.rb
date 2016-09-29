@@ -16,6 +16,61 @@ class P
     @site_name = 'http://pbender.ru'
 	end
 
+  def self.list_plugins(p_in=nil, e=true)
+    plugins = Dir['lib/out/*/plugin.rb'].map { |i|
+      "Out#{i.split('/')[-2].gsub('.rb', '').capitalize}"
+    }
+    if p_in.nil?
+      if e
+        plugins.map {|i| [i, eval(i).info]}
+      else
+        plugins
+      end
+    else
+      if e
+        plugins.map {|i| eval(i).info[:in][p_in] ? [i, eval(i).info] : nil}.compact
+      else
+        plugins.map {|i| eval(i).info[:in][p_in] ? i : nil}.compact
+      end
+    end
+  end
+
+  def self.update_progress(p_id, progress)
+    p = Project.find_by(:id => p_id)
+    if p.nil?
+      
+    else
+      if progress == p.progress
+        p.progress = progress
+        p.save
+      end
+    end
+  end
+
+  def self.prepare_dir(user_id, project_id, plugin_name)
+    user_id    = user_id.to_s 
+    project_id = project_id.to_s
+    prefix     = "#{Rails.root}/public/out/"
+
+    if !Dir.exist?(prefix + user_id + "/")
+      Dir.mkdir(prefix + user_id + "/")
+    end
+
+    if !Dir.exist?(prefix + user_id + "/" + project_id + "/")
+      Dir.mkdir(prefix + user_id + "/" +  project_id + "/")
+    end
+
+    if !Dir.exist?(prefix + user_id + "/" + project_id + "/"+ plugin_name + "/")
+      Dir.mkdir(prefix + user_id + "/" +  project_id + "/"+ plugin_name + "/")
+    end
+
+    {
+      :path      => "/out/" + user_id + "/" + project_id + "/" + plugin_name + "/",
+      :full_path => prefix + user_id + "/" + project_id + "/"+ plugin_name + "/"
+    }
+
+  end
+
 	def open_url(url='/')
     print url
     old_full_url = @full_url

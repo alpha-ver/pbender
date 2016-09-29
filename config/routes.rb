@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
 
-  resources :plugins
   ##static page
   root 'page#index'
   get 'page/about'
@@ -19,11 +18,13 @@ Rails.application.routes.draw do
   delete 'api/delete_field'
   post   'api/upd_project_setting'
   post   'api/controll_task'
-    
+  post   'api/get_generate_setting'
+  post   'api/add_task_generating'
+  post   'api/get_generate_progress'  
 
   resources :projects
-  resources :projects
-  resources :projects
+  resources :plugins
+  resources :files, :only => [:index]
   devise_for :users
   
   # The priority is based upon order of creation: first created -> highest priority.

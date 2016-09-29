@@ -29,7 +29,7 @@ def get_task
   begin
     p=Project.find_by(:status => ["new_task", "update_task"], :pid => nil)
     if p.nil?
-      p=Project.where("start_at < '#{Time.now.utc}' AND tasking = true AND pid is null").first
+      p=Project.where("start_at < '#{Time.now.utc}' AND tasking = true AND pid is null AND status IN ('stop', 'finish')").first
       if !p.nil?
         p.start_at = Time.now + p.interval
       end

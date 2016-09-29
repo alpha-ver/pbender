@@ -357,7 +357,7 @@ nav.paginate{
     padding:10px;
   }
   
-  .row {
+  & > .row {
     height: 100%;
     display: table-row;
   }
@@ -457,3 +457,67 @@ nav.paginate{
     border-left: solid 1px #333;
   }
 }
+
+//plugin generate 
+  ul.ul-generate{
+    li.module{
+
+      cursor:pointer;
+      color: #37BC9B;
+    
+      &:hover, &.active{
+        color: #fff;
+        background-color: #434A54;
+      }
+
+
+
+
+    }
+  }
+
+//fixed alert
+ #fixed-notice{
+  position: fixed;
+  display: none;
+  bottom: 0px;
+  right: 0px;
+  background-color: #37BC9B;
+  color: #fff;
+  padding: 7px;
+  border-top: solid 4px #48cfad;
+
+  &:hover{
+
+    .text{
+      display: inline-block;
+    }
+  }
+
+
+  .progr{
+    display: inline-block;
+    .span{
+      padding:5px
+    }
+
+  }
+
+  .text{
+    display: none;
+  }
+  
+  :hover{
+
+  }
+
+
+  a{
+    color:  #fff;
+    &:hover{
+      color: #434A54;
+    }
+  }
+
+
+ }

@@ -1,0 +1,16 @@
+%h1 Список файлов
+
+%table.table
+  %thead
+    %tr
+      %th
+      %th
+      %th
+
+  %tbody
+    - @files.each do |file|
+      %tr
+        %td= link_to 'Show', file
+        %td= link_to 'Edit', edit_file_path(file)
+        %td= link_to 'Destroy', file, :method => :delete, :data => { :confirm => 'Are you sure?' }
+

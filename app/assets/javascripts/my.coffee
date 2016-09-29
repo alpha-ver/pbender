@@ -86,6 +86,58 @@ panel_class=(v) ->
     else if v['enabled'] == true && v['ok'] == true
       'panel-success'
 
+generate_progress = ->
+  $.ajax
+    type: "POST"
+    url: '/api/get_generate_progress'
+    data: 
+      id: 1
+    success: (xhr) ->
+      if xhr['status'] == 'generate'
+        html = [
+          "<div class=\"progr\">",
+            "<i class=\"fa fa-spinner fa-spin fa-fw\"></i>",
+            "<span>",
+              xhr['progress'] + "%",
+            "</span>",
+          "</div>",
+          "<div class=\"text\">",
+            "Выгрузка проекта — ",
+            xhr['name']
+          "</div>"
+        ]
+      else if xhr['status'] == 'task_generate'
+        html = [
+          "<div class=\"progr\">",
+            "<i class=\"fa fa-spinner fa-spin fa-fw\"></i>",
+          "</div>",
+          "<div class=\"text\">",
+            "Подготовка к выгрузке проекта — ",
+            xhr['name']
+          "</div>"
+        ]
+      else if xhr['status'] == 'finish'
+        html = [
+          "<div class=\"progr\">",
+            "<a href=\"#{xhr['url']}\">"
+              "<i class=\"fa fa-download\"></i>",
+              " Скачать",
+            "</a>",
+          "</div>"
+        ]
+
+      if xhr['success']
+        $('#fixed-notice').html(html.join(''))
+        $('#fixed-notice').show()
+      else
+
+      return
+    complete: (xhr)->
+      if xhr.responseJSON['success']
+        setTimeout generate_progress, 5000   
+      return
+  return
+
 
 add_accordion_field=(v) ->
   c "add accordion field #{v['name']}", "event"
@@ -226,10 +278,12 @@ $ ->
     asw=$('#affix_sidebar').width()
     $('#affix_sidebar').width(asw)
 
-    $('#affix_sidebar').affix(
-      offset:
-        top: 153
-    )
+    #$('#affix_sidebar').affix(
+    #  offset:
+    #    top: 153
+    #)
+
+    generate_progress()
 
     #autoloading AJAX
     if $("#project_def").val() == "edit"
@@ -681,3 +735,93 @@ $ ->
           console.log xhr
           $('body').removeClass('loading')
       return false
+
+    #Plugin generate click settings
+    $(document.body).delegate '.ul-generate > .module', 'click', (event) ->
+      plugin = $(this).data('plugin')
+      c "Plugin generate click settings #{plugin}", "event"
+      $('body').addClass('loading')
+      url = "/api/get_generate_setting"
+
+      ######
+      $.ajax
+        type: "POST"
+        url: url
+        data: 
+          utf8: "✓"
+          _method: "post"
+          authenticity_token: $("input[name='authenticity_token']").val()
+          project:
+            id: $('#project_id').val()
+          plugin: plugin 
+        success: (xhr) ->
+
+          if xhr['success']
+            $('ul.ul-generate > li.active').removeClass('active')
+            $(this).addClass('active')
+            $('#plugin_out_form h4').html("Выбран модуль <small>#{xhr['plugin_info']['name']['ru']}</small>")
+            
+            if xhr['plugin_info']['setting'] == null
+              setting = "У данного модуля нет настроек."
+            else
+              setting = "TODO"
+
+            html = [
+              "<input value=\"#{plugin}\" name=\"plugin\" type=\"hidden\">",
+              "<div class=\"row\">",
+                "<div class=\"col-lg-9\">",
+                  setting,
+                "</div>",
+                "<div class=\"col-lg-3\">",
+                  "<button name=\"button\" type=\"submit\" class=\"btn btn-success btn-sm btn-block\" id=\"ButtonGenerate\">",
+                    "<span class=\"fa fa-download\"></span> ",
+                    "Выгрузить",
+                  "</button>",
+                "</div>",                
+              "</div>"
+            ].join('')
+
+            $('#plugin_out_form .for-ajax').html(html)
+            $('#plugin_out_form').removeClass('hide')
+          else
+
+          $('body').removeClass('loading')
+        error: (xhr) -> 
+          c "AJAX error #{xhr['status']} #{url}", "error"
+          console.log xhr
+          $('body').removeClass('loading')
+
+    #plugin generate form
+    $('#LiveOForm').submit (e) ->
+      c "Plugin generate form submit #{this.id}", "event"
+      $('body').addClass('loading')
+      url = "/api/add_task_generating"
+      $("#plugin_out_form .for-alert").html('')
+
+      ######
+      $.ajax
+        type: "POST"
+        url: url
+        data: $('#LiveOForm').serialize()
+        success: (xhr) ->
+          if xhr['success']
+            $("#plugin_out_form .for-alert").html([
+              "<div class=\"alert alert-success\" role=\"alert\">",
+                "Задача добавленна в очередь",
+              "</div>"
+            ].join(''))
+            generate_progress()         
+          else
+            $("#plugin_out_form .for-alert").html([
+              "<div class=\"alert alert-danger\" role=\"alert\">",
+                xhr['error']['message'],
+              "</div>"
+            ].join(''))
+
+          $('body').removeClass('loading')
+        error: (xhr) ->
+          c "AJAX error #{xhr['status']} #{url}", "error"
+          console.log xhr
+          $('body').removeClass('loading')
+      return false
+

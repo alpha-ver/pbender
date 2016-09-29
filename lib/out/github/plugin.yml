@@ -9,8 +9,8 @@ email:  hav0k@me.com
 author: Alexey Vildyaev
 site: http://hav0k.ru
 in:
-  task: true
-  ui: false 
+  live: true
+  generate: false 
 
 #Setting fields
 setting: 
@@ -100,3 +100,4 @@ fields:
       String
     request: false
     local_file: true
+

@@ -1,0 +1,20 @@
+#info plugin
+name:
+  en: XSLX plugin out
+  ru: XSLX plugin out
+description:
+  en: XLSX desc
+  ru: XLSX desc        
+email:  hav0k@me.com
+author: Alexey Vildyaev
+site:   http://hav0k.ru
+icon:   file-excel-o
+in:
+  live:     false
+  generate: true
+
+#Setting fields
+setting:
+  
+#Out fields
+fields:

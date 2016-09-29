@@ -27,19 +27,24 @@ ru:
     error:    "Ошибка"
     new:      "Новый"
     new_task: "Новая задача"
-    finish:   "Завершенна"
     run:      "Выполняется"
+    finish:   "Завершенна"   
     stop:     "Остановленна"
+    task_generate: "Ожидание Выгрузки"
+    generate: "Выгрузка"
+
   
   min: "Мин."
   0ff: "Выкл."
   error: "Ошибка"
   blank: "Пусто!"
+  files: Файлы
 
   urls_parsed: "Спарсенно"
   urls_skipped: "Пропущенные"
   urls_intask: "Не проверялись"
-  out_plugins: "Выгрузка"
+  generate_plugins: "Генерация"
+
 
 
 

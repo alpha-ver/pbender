@@ -25,7 +25,9 @@ class ProjectsController < ApplicationController
         .order(:created_at => :desc)
         .paginate(:page => params[:page], :per_page => 50)            
     when 'plugins'
-      @type = 'plugins'
+      @type   = 'plugins'
+      @fields = @project.fields.where(:enabled => true).all
+
     else
       @type = 'parsed'
       @fields = @project.fields.where(:enabled => true).all
@@ -143,5 +145,4 @@ class ProjectsController < ApplicationController
         {:success => false, :error => e.message}
       end
     end
-
 end

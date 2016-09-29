@@ -28,7 +28,7 @@ module ApplicationHelper
       if @plugin.setting[name].nil?
         '' 
       else
-         @plugin.setting[name]
+        @plugin.setting[name]
       end
     end
   end
@@ -41,4 +41,11 @@ module ApplicationHelper
     h_formatter.format(lexer.lex(html))
   end
 
+
+
+  def get_generate
+    if current_user
+      Project.find_by(:status => 'generate', :user_id => current_user.id)
+    end
+  end
 end
