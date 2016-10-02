@@ -1,0 +1,19 @@
+<%-if !l['category'].blank? && l['category'][0][:otype] == 'text'%>
+  <%-categories = l['category'][1][:result_text]%>
+<%-elsif !l['category'].blank? && l['category'][0][:otype] == 'array'%>
+  <%-categories = l['category'][1][:result_arr].join(' ')%>
+<%-else%>
+  <%-categories = ''%>
+<%-end%>
+---
+layout: post
+title:  "<%=l['title'][1][:result_text]%>"
+date:   <%=time_now%>
+categories: <%=categories%>
+---
+
+<%=image_tag%>
+
+<%-if l['content'][0][:otype] == 'html'%>
+<%=l['content'][1][:result_text]%>
+<%-end%>

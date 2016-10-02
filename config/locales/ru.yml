@@ -1,0 +1,58 @@
+ru:
+  email: Почта
+  username: Логин
+  password: Пароль
+  remember_me: Запомнить меня
+
+  about: О сервисе
+  manual: Инструкции
+  plugins: Плагины
+  setting_plugin: Настройка плагинов
+  support: Поддержка
+  projects: Проекты
+  sample:  Примеры
+  sign_in: Войти
+  login: Войти
+  sign_up: Регистрация
+  logout: Выход
+  profile: Профиль
+  plugin: Плагины α
+  contacts: Контакты
+  new_project: Новый сайт
+  forgot_your_password: Забыли пароль
+  didn_t_receive_confirmation_instructions: Повторить активацию 
+  support_the_project: Поддержать проект
+
+  status:
+    error:    "Ошибка"
+    new:      "Новый"
+    new_task: "Новая задача"
+    run:      "Выполняется"
+    finish:   "Завершенна"   
+    stop:     "Остановленна"
+    task_generate: "Ожидание Выгрузки"
+    generate: "Выгрузка"
+
+  
+  min: "Мин."
+  0ff: "Выкл."
+  error: "Ошибка"
+  blank: "Пусто!"
+  files: Файлы
+  not_use_out: Не использовать плагин
+  name: Название 
+  module: модуль
+  new_setting_plugin: Добавить шаблон настроек
+
+  urls_parsed: "Спарсенно"
+  urls_skipped: "Пропущенные"
+  urls_intask: "Не проверялись"
+  generate_plugins: "Генерация"
+
+
+
+
+
+  will_paginate:
+    next_label: "Вперёд"
+    previous_label: "Назад"

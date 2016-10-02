@@ -1,46 +1,172 @@
-%p
-  %b Name:
-  = @project.name
-%p
-  %b Url:
-  = @project.url
-%p
-  %b User:
-  = @project.user_id
-%p
-  %b Status:
-  = @project.status
+.container.show-project
+  .row
+    .col-lg-9.table-col
+      %h1 
+        = @project.name
+        -if !@project.group.blank?
+          %small
+            = @project.group
+            
+    .col-lg-3.table-col.table-col-right
+      .for-status{:id => "st_#{@project.status}"}
+        =t("status.#{@project.status}")
 
-%table.table.table-striped
-  %thead
-    %tr
-      %th URL
-      -@fields.each do |field|
-        %th
-          =field.name
+.container.show-project   
+  .row
+    .col-lg-12
+      -if @project.status == 'error' && !@project.result['exeption'].blank?
+        .alert.alert-danger.alert-block
+          %button.close{:type=>"button", :data=>{:dismiss=>"alert"}} ×
+          -if !current_user.admin
+            %h4= @project.result['exeption']
+            %p
+              %ul
+                -@project.result['backtrace'].each do |b|
+                  %li= b
+          -else
+            %h4
+              Ошибка —
+              = @project.result['exeption'].split('-')[0]
+            %p 
+              Вы можете 
+              =link_to 'сообщить', page_contacts_path
+              о баге.
 
-  %tbody
-    -@urls.each do |url|
-      %tr
-        %td
-          = url.url
 
-        -@fields.each do |field|
-          %td
-            -r=Result.find_by(:url_id => url.id, :field_id => field.id)
-            -if r.nil?
-              err
+      .panel
+        %ul.nav.nav-tabs
+          = active_link_to t('urls_parsed'),       project_path,                   :wrap_tag => :li, :active => @type == "parsed"  ? true : false
+          = active_link_to t('urls_skipped'),      project_path(:type=>'skipped'), :wrap_tag => :li, :active => @type == "skipped" ? true : false
+          = active_link_to t('urls_intask'),       project_path(:type=>'intask' ), :wrap_tag => :li, :active => @type == "intask"  ? true : false
+          = active_link_to t('generate_plugins'),  project_path(:type=>'plugins'), :wrap_tag => :li, :active => @type == "plugins" ? true : false
+
+        .tab-content
+          .tab-pane.active.tab-padding
+            -case @type
+            -when 'parsed'
+              -@urls.each do |url|
+                %h3
+                  = @project.url
+                  = url.url
+                  %small
+                    ( Прошло:
+                    = time_ago_in_words(I18n.l url.updated_at)
+                    )
+                %dl.dl-horizontal.dl-parsed
+                  -@fields.each do |field|
+                    - download = field.setting['download'] == "true" ? " dt-download" : ""
+                    %dt{:class=> "dt-#{field.otype}#{download}"}
+                      .name
+                        = field.name 
+                      .icon            
+                        -case field.otype
+                        -when 'text'
+                          %span{:data => {:placement =>"right", :toggle=>"tooltip", :original=>{:title=>"Текст"}}}
+                            = fa_icon("file-text-o")
+                        -when 'html'
+                          %span{:data => {:placement =>"right", :toggle=>"tooltip", :original=>{:title=>"HTML"}}}
+                            = fa_icon("file-code-o")
+                        -when 'attr'
+                          %span{:data => {:placement =>"right", :toggle=>"tooltip", :original=>{:title=>"Текст"}}}
+                            = fa_icon("file-text-o")
+                        -when 'array'
+                          %span{:data => {:placement =>"right", :toggle=>"tooltip", :original=>{:title=>"Массив"}}}
+                            = fa_icon("database")
+                        -when 'array_attr'
+                          %span{:data => {:placement =>"right", :toggle=>"tooltip", :original=>{:title=>"Массив"}}}
+                            = fa_icon("database")
+
+                        -if field.setting['download'] == "true" 
+                          %span{:data => {:placement =>"right", :toggle=>"tooltip", :original=>{:title=>"Загруженно"}}}
+                            =fa_icon("download")
+
+                    %dd          
+                      -r=Result.find_by(:url_id => url.id, :field_id => field.id)
+                      -if r.nil?
+                        = t('blank')
+                      -else
+                        -if field.otype == "text" || field.otype == "attr"
+                          -if field.setting['download'] == "true" && !r.result_text.match( /[-_\w:]+\.(jpe?g|png|gif|svg)$/i ).nil?
+                            %img{:src => r.result_text, :width => '500px'}
+                            %br/
+                            %a{:href=>"https://pbender.ru#{r.result_text}"}
+                              = "https://pbender.ru#{r.result_text}"
+                          -else
+                            = r.result_text
+                        -elsif field.otype == "html"
+                          = preserve do
+                            = raw html_formatter(r.result_text)
+                        -else
+                          %ul.list-inline
+                            -r.result_arr.each do |rr|
+                              %li
+                                =rr
+
+              %nav.paginate.text-center{:aria => {:label=>"Urls navigation"}}
+                = will_paginate @urls, renderer: BootstrapPagination::Rails   
+
+            -when 'skipped'
+              %table.table
+                %thead
+                  %tr
+                    %th URL
+                    %th Log
+                %tbody
+                  -@urls.each do |url|
+                    %tr
+                      %td= url.url
+                      %td= url.log
+
+              %nav.paginate.text-center{:aria => {:label=>"Urls navigation"}}
+                = will_paginate @urls, renderer: BootstrapPagination::Rails 
+
+            -when 'intask'
+              %table.table
+                %thead
+                  %tr
+                    %th URL
+                    %th= t('time_at')
+                %tbody
+                  -@urls.each do |url|
+                    %tr
+                      %td= url.url
+                      %td= url.created_at
+
+              %nav.paginate.text-center{:aria => {:label=>"Urls navigation"}}
+                = will_paginate @urls, renderer: BootstrapPagination::Rails     
+            -when 'plugins'
+              %h3 Выгрузка текущих данных из проекта 
+              %p Этот тип выгрузки можно использовать для генерации документов, затрагивает только те данные, которые есть в базе. Для организации "живой" выгрузки(сразу отправляет данные в модуль выгрузки после парсинга нового url) используйте настройки проекта, но прежде вы должны настроить модуль на странице настройки плагинов.
+              
+              %h4 Доступные модули выгрузки 
+
+              .row
+                .col-lg-7
+                  %h5 Генераторы 
+                  %ul.ul-generate.list-group
+                    -P.list_plugins(:generate).each do |p|
+                      %li.module.list-group-item{:data=> { :plugin => p[0] }}
+                        = p[1][:name][I18n.locale]
+
+                .col-lg-5
+                  %h5
+                    Живая выгрузка 
+                    =fa_icon("link")
+                  %ul.ul-live.list-group
+                    -P.list_plugins(:live).each do |p|
+                      %li.list-group-item= p[1][:name][I18n.locale]
+
+              .row
+                .col-lg-12#plugin_out_form.hide
+                  %h4 Настройка модуля
+                  .for-alert
+                  =form_for 'project', :html =>{:id=>"LiveOForm"} do |f|
+                    =f.hidden_field :id, :value => params[:id]
+                    .for-ajax
+
+
+
+
+
             -else
-              -if field.otype == "text" || field.otype == "html" || field.otype == "attr"
-                =r.result_text
-              -else
-                %ul
-                  -r.result_arr.each do |rr|
-                    %li
-                      =rr
-
-= will_paginate @urls, renderer: BootstrapPagination::Rails 
-
-
-//= link_to 'Edit', edit_project_path(@project)
-//= link_to 'Back', projects_path
+              %h4 Такого быть не должно

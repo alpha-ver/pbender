@@ -5,5 +5,10 @@
 #= require bootstrap/collapse
 #= require bootstrap/dropdown
 #= require bootstrap/alert
+#= require bootstrap/affix
+#= require bootstrap/tooltip
+#= require bootstrap/carousel
+#= require icheck
 #= require bootstrap-select/bootstrap-select
-#= require projects
+#= require bootstrap-slider
+#= require my

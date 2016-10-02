@@ -1,9 +1,12 @@
-@import "bootstrap-sprockets";
-@import "bootstrap";
-@import "bootstrap/glyphicons";
+@import "bootflat";
 @import "bootstrap-select";
-@import "devise_bootstrap_views";
-@import "projects";
-@import "highlight";
-@import "page";
 
+@import 'icheck/square/_all'; //includes all color schemes
+
+@import "devise_bootstrap_views";
+@import 'bootstrap-slider';
+@import 'font-awesome';
+
+@import "highlight";
+@import "flat";
+@import "my";

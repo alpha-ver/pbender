@@ -6,15 +6,17 @@
       .panel-body
         = form_for(resource, as: resource_name, url: session_path(resource_name), html: { role: "form" }) do |f|
           .form-group
-            = f.label :email
+            = f.label :email, t('.email', :default=>"Email")
             = f.email_field :email, autofocus: true, class: "form-control"
           .form-group
-            = f.label :password
+            = f.label :password, t('.password', :default=>"Password")
             = f.password_field :password, autocomplete: "off", class: "form-control"
           - if devise_mapping.rememberable?
             .checkbox
               = f.label :remember_me do
-                = f.check_box :remember_me
-                remember me
-          = f.submit  t('.sign_in', :default => "Sign in"), class: "btn btn-primary"
+                = f.check_box :remember_me, :class => "icheck", :data => {:skin=>"square", :color=>"green"}
+                = t('.remember_me', :default => 'Remember me')
+          = f.submit  t('.sign_in', :default => "Sign in"), class: "btn btn-success btn-sm btn-block"
+    
+
     = render "devise/shared/links"

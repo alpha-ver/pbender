@@ -16,6 +16,61 @@ class P
     @site_name = 'http://pbender.ru'
 	end
 
+  def self.list_plugins(p_in=nil, e=true)
+    plugins = Dir['lib/out/*/plugin.rb'].map { |i|
+      "Out#{i.split('/')[-2].gsub('.rb', '').capitalize}"
+    }
+    if p_in.nil?
+      if e
+        plugins.map {|i| [i, eval(i).info]}
+      else
+        plugins
+      end
+    else
+      if e
+        plugins.map {|i| eval(i).info[:in][p_in] ? [i, eval(i).info] : nil}.compact
+      else
+        plugins.map {|i| eval(i).info[:in][p_in] ? i : nil}.compact
+      end
+    end
+  end
+
+  def self.update_progress(p_id, progress)
+    p = Project.find_by(:id => p_id)
+    if p.nil?
+      
+    else
+      if progress == p.progress
+        p.progress = progress
+        p.save
+      end
+    end
+  end
+
+  def self.prepare_dir(user_id, project_id, plugin_name)
+    user_id    = user_id.to_s 
+    project_id = project_id.to_s
+    prefix     = "#{Rails.root}/public/out/"
+
+    if !Dir.exist?(prefix + user_id + "/")
+      Dir.mkdir(prefix + user_id + "/")
+    end
+
+    if !Dir.exist?(prefix + user_id + "/" + project_id + "/")
+      Dir.mkdir(prefix + user_id + "/" +  project_id + "/")
+    end
+
+    if !Dir.exist?(prefix + user_id + "/" + project_id + "/"+ plugin_name + "/")
+      Dir.mkdir(prefix + user_id + "/" +  project_id + "/"+ plugin_name + "/")
+    end
+
+    {
+      :path      => "/out/" + user_id + "/" + project_id + "/" + plugin_name + "/",
+      :full_path => prefix + user_id + "/" + project_id + "/"+ plugin_name + "/"
+    }
+
+  end
+
 	def open_url(url='/')
     print url
     old_full_url = @full_url
@@ -46,8 +101,8 @@ class P
       urls.each do |url|
         #fo lo urls
         url.gsub!(/([\s]+)/, '')
-        
-        uri = URI.parse(url)
+
+        uri = URI.parse(URI.encode(url))
         if !uri.path.nil?
           if  uri.host.nil? &&  uri.path[0] == "/"
             if uri.query.nil? 
@@ -118,25 +173,27 @@ class P
   end
 
   def get_highlight()
-    formatter = Rouge::Formatters::HTML.new
-    lexer     = Rouge::Lexers::HTML.new
-    formatter.format(lexer.lex(get_raw))
+    formatter = Rouge::Formatters::HTML.new()
+    h_formatter = Rouge::Formatters::HTMLPygments.new(formatter, 'highlight')
+    lexer = Rouge::Lexers::HTML.new()
+    h_formatter.format(lexer.lex(get_raw))
   end
 
   def get_result_field(field)
     ren = nil
     r   = xpath(field[:setting]['xpath'])
     if r[:success] && !r[:result].blank?
-      formatter = Rouge::Formatters::HTML.new
-      lexer     = Rouge::Lexers::HTML.new
       reh       = nil
+      formatter = Rouge::Formatters::HTML.new()
+      h_formatter = Rouge::Formatters::HTMLPygments.new(formatter, 'highlight')
+      lexer = Rouge::Lexers::HTML.new()
       ####
       case field['otype']
       when 'text'
         ren=r[:result].text
       when 'html'
         ren=r[:result].to_s
-        reh=formatter.format(lexer.lex(ren))
+        reh=h_formatter.format(lexer.lex(ren))
       when 'attr'
         ren=r[:result].attr(field[:setting]['attr']).to_s
       when 'array'
@@ -214,7 +271,11 @@ class P
         path = dir_create + Digest::MD5.hexdigest(f) + '.' + uri.path.split('.')[-1]
         File.open(path, 'wb'){|sf| sf.write(f)}
         f = nil
+<<<<<<< HEAD
         path
+=======
+        path.gsub!("#{Rails.root}/public", '')
+>>>>>>> dev
       rescue Exception => e
         e.message
       end

@@ -1,61 +1,65 @@
-%h1 Editing plugin
+.container
+  .row
+    .col-lg-12
 
--if current_user.admin
-  -formatter = Rouge::Formatters::HTML.new
-  -lexer = Rouge::Lexers::JSON.new
-  = preserve do
-    = raw formatter.format(lexer.lex(@out_plugin.to_json))
-    = raw formatter.format(lexer.lex(@plugin.to_json))    
+      %h1 Editing plugin
 
-%dl.dl-horizontal
-  %dt Name
-  %dd= @out_plugin[:name][I18n.locale]
+      -if current_user.admin
+        -formatter = Rouge::Formatters::HTML.new
+        -lexer = Rouge::Lexers::JSON.new
+        = preserve do
+          = raw formatter.format(lexer.lex(@out_plugin.to_json))
+          = raw formatter.format(lexer.lex(@plugin.to_json))    
 
-  %dt Desc
-  %dd= @out_plugin[:description][I18n.locale]
+      %dl.dl-horizontal
+        %dt Name
+        %dd= @out_plugin[:name][I18n.locale]
 
-  %dt Author
-  %dd= @out_plugin[:author] 
+        %dt Desc
+        %dd= @out_plugin[:description][I18n.locale]
 
-  %dt Email
-  %dd= link_to @out_plugin[:email], 'mailto:' + @out_plugin[:email]
+        %dt Author
+        %dd= @out_plugin[:author] 
 
-
-  %dt Site
-  %dd= link_to @out_plugin[:site], @out_plugin[:site]
+        %dt Email
+        %dd= link_to @out_plugin[:email], 'mailto:' + @out_plugin[:email]
 
 
-= form_for @plugin do |f|
-  .field
-    .form-group
-      = f.label :name, t('name')
-      = f.text_field :name
-  .field
-    = fields_for :setting do |fs|
-      -@out_plugin[:setting].each do |s|
-        -case s[:type]
-        -when 'InputField'
+        %dt Site
+        %dd= link_to @out_plugin[:site], @out_plugin[:site]
+
+
+      = form_for @plugin do |f|
+        .field
           .form-group
-            = fs.label s[:name], s[:label][I18n.locale]
-            = fs.text_field s[:name], :value => plugin_setting_val(s[:name]) , :placeholder => s[:placeholder][I18n.locale]
-        -when 'PasswordField'
-          .form-group
-            = fs.label s[:name], s[:label][I18n.locale]
-            = fs.password_field s[:name], :value => plugin_setting_val(s[:name]), :placeholder => s[:placeholder][I18n.locale]
-        -when 'SelectField'
+            = f.label :name, t('name')
+            = f.text_field :name
+        .field
+          = fields_for :setting do |fs|
+            -@out_plugin[:setting].each do |s|
+              -case s[:type]
+              -when 'InputField'
+                .form-group
+                  = fs.label s[:name], s[:label][I18n.locale]
+                  = fs.text_field s[:name], :value => plugin_setting_val(s[:name]) , :placeholder => s[:placeholder][I18n.locale]
+              -when 'PasswordField'
+                .form-group
+                  = fs.label s[:name], s[:label][I18n.locale]
+                  = fs.password_field s[:name], :value => plugin_setting_val(s[:name]), :placeholder => s[:placeholder][I18n.locale]
+              -when 'SelectField'
 
-        -when 'moo'
+              -when 'moo'
 
-        -else
-          -if current_user.admin
-            %p 
-              %b
-                =s[:type]
-              \ - type is not walid
+              -else
+                -if current_user.admin
+                  %p 
+                    %b
+                      =s[:type]
+                    \ - type is not walid
 
-  .actions
-    = f.submit 'Save'
+        .actions
+          = f.submit 'Save'
 
-= link_to 'Show', @plugin
-\|
-= link_to 'Back', plugins_path
+      = link_to 'Show', @plugin
+      \|
+      = link_to 'Back', plugins_path

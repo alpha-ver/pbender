@@ -19,7 +19,7 @@ class OutGithub
     YAML.load_file("#{Rails.root}/lib/out/github/plugin.yml").deep_symbolize_keys
   end 
 
-  def setting_test(delete=false)
+  def setting_test(delete=false) # <- c[:success] = true/false
     c = create_or_update('test.txt', 'test')
     if c[:success] && delete
       c = delete('test.txt')
@@ -29,7 +29,7 @@ class OutGithub
 
   #cu - current url hash
   #rs - resutls hash
-  def push_url(cu, rs)
+  def push_url(cu, rs) # <- live out
     if @pa.setting['layout'].blank?
       erb_layout = File.open("#{Rails.root}/lib/out/github/layout/jekyll.erb").read
     else

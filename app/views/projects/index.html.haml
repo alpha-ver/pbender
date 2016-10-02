@@ -1,61 +1,98 @@
-%h1 Listing projects
 
-%table.table
-  %thead
-    %tr
-      %th{:width => '40px'}
-      %th Name
-      %th Url
-      %th Status
-      %th url all
-      %th url parse
-      %th url skip
+.container
+  .row
+    .col-lg-9
+      %h1 Список сайтов
+    .col-lg-3.for-title
+      = link_to t('new_project'), new_project_path, :class=>"btn btn-success btn-sm btn-block"
 
-      %th{:width => '96px'}
-      %th{:width => '124px'}
+.container
+  .row
+    .col-lg-12
+      %table.table
+        %thead
+          %tr
+            %th{:width => '34px'}
+            %th Имя
+            %th URL
+            %th Статус
+            %th Раписание
+            %th 
+              %a{:href=>"#", :title=>"Все/Спарсенные/Пропущенные", :data=> {:toggle=>"tooltip", :placement=>"top"} }
+                Статистика
+            %th{:width => '68px'}
+            %th{:width => '68px'}
 
-  %tbody
-    -last_group=nil
-    - @projects.each do |project|
-      -if last_group != project.group
-        -last_group = project.group
-        %tr.info
-          %th{:colspan => 8}
-            -if project.group.blank?
-              &nbsp;
-            -else
-              =project.group
+        %tbody
+          -last_group=nil
+          - @projects.each do |project|
+            -if last_group != project.group
+              -last_group = project.group
+              %tr.info
+                %th{:colspan => 9}
+                  -if project.group.blank?
+                    &nbsp;
+                  -else
+                    =project.group
 
-      %tr
-        %th
-          %button.btn.btn-default.btn-xs{:type => "button", :disabled=>false}
-            %span.glyphicon.glyphicon-refresh{"aria-hidden" => "true"}
+            %tr{:id=>"trp_#{project.id}"}
+              %td
+                %button.btn.btn-1.btn-xs.modal-interval{:type => "button", 
+                                                        :id=>"tasking_#{project.id}", 
+                                                        :data =>{ :toggle   =>"modal",
+                                                                  :target   =>"#modal",
+                                                                  :id       => project.id,
+                                                                  :tasking  => project.tasking ? "true" : "false",
+                                                                  :interval => project.interval,
+                                                                  :title    => project.name,
+                                                                  :method   => "interval"}}
+                  %span.glyphicon.glyphicon-calendar{"aria-hidden" => "true"}
+              %td= link_to project.name, project
+              %td= project.url
+              %td= t("status.#{project.status}")
+              %td.tasking
+                -if project.tasking
+                  -if !project.interval.blank?
+                    = project.interval / 60
+                    = t('min')
+                  -else
+                    = t('error')
+                -else
+                  =t('0ff')
+              %td
+                = project.urls.count
+                \/
+                = project.urls.where(:parse => true, :skip => false).count
+                \/
+                = project.urls.where(:parse => true, :skip => true).count
+              %td
+                = link_to edit_project_path(project), :class=> 'btn btn-xs btn-1' do 
+                  %span.glyphicon.glyphicon-edit{"aria-hidden" => "true"}
+                = link_to project, :class=> 'btn btn-xs btn-1', :method => :delete, :data => { :confirm => 'Are you sure?' } do
+                  %span.glyphicon.glyphicon-trash{"aria-hidden" => "true"}
+              %td
+                .controll_task
+                  %button.btn.btn-1.btn-xs{:type => "button", :id=>"newtask_#{project.id}", :disabled=>false}
+                    %span.glyphicon.glyphicon-play{"aria-hidden" => "true"}
+                  %button.btn.btn-1.btn-xs{:type => "button", :id=>"stop_#{project.id}", :disabled=>false}
+                    %span.glyphicon.glyphicon-stop{"aria-hidden" => "true"} 
 
-        %td= project.name
-        %td= project.url
-        %td= project.status
-        %td= project.urls.count
-        %td= project.urls.where(:parse => true, :skip => false).count
-        %td= project.urls.where(:parse => true, :skip => true).count
-        %td
-          = link_to project, :class=> 'btn btn-default btn-xs' do
-            %span.glyphicon.glyphicon-list-alt{"aria-hidden" => "true"}
-          = link_to edit_project_path(project), :class=> 'btn btn-default btn-xs' do 
-            %span.glyphicon.glyphicon-edit{"aria-hidden" => "true"}
-          = link_to project, :class=> 'btn btn-default btn-xs', :method => :delete, :data => { :confirm => 'Are you sure?' } do
-            %span.glyphicon.glyphicon-trash{"aria-hidden" => "true"}
-        %td
 
-          .controll_task
-            %button.btn.btn-default.btn-xs{:type => "button", :id=>"tasking_#{project.id}", :disabled=>false}
-              %span.glyphicon.glyphicon-calendar{"aria-hidden" => "true"}
-            %button.btn.btn-default.btn-xs{:type => "button", :id=>"newtask_#{project.id}", :disabled=>false}
-              %span.glyphicon.glyphicon-play{"aria-hidden" => "true"}
-            %button.btn.btn-default.btn-xs{:type => "button", :id=>"updtask_#{project.id}", :disabled=>false}
-              %span.glyphicon.glyphicon-repeat{"aria-hidden" => "true"}
-            %button.btn.btn-default.btn-xs{:type => "button", :id=>"stop_#{project.id}", :disabled=>false}
-              %span.glyphicon.glyphicon-stop{"aria-hidden" => "true"}      
-
-%br
-
-= link_to 'New Project', new_project_path
+      .modal.fade{:role => "dialog", :tabindex => "-1", :id=>"modal"}
+        .modal-dialog.modal-lg{:role => "document"}
+          =form_for 'project', :url=>"/api/controll_task", :html=>{:id=>"modal-project"} do |f|
+            =f.hidden_field :id, :value => ''
+            .modal-content
+              .modal-header
+                %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
+                  %span{"aria-hidden" => "true"} ×
+                %h4.modal-title
+              .modal-body
+          
+              .modal-footer
+                %button.btn.btn-default.btn-sm{"data-dismiss" => "modal", :type => "button"} Закрыть
+                %button.btn.btn-success.btn-sm{:type => "submit"} Сохранить
+            //.modal-content
+          // form
+        //.modal-dialog
+      //.modal

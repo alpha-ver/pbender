@@ -11,8 +11,30 @@ class ProjectsController < ApplicationController
   # GET /projects/1
   # GET /projects/1.json
   def show
-    @fields = @project.fields.where(:enabled => true).all
-    @urls   = @project.urls.where(:parse => true, :skip => false).paginate(:page => params[:page], :per_page => 10)
+    case params[:type]
+    when 'skipped'
+      @type = 'skipped'
+      @fields = @project.fields.where(:enabled => true).all
+      @urls   = @project.urls.where(:parse => true, :skip => true)
+        .order(:created_at => :desc)
+        .paginate(:page => params[:page], :per_page => 50)      
+    when 'intask'
+      @type = 'intask'
+      @fields = @project.fields.where(:enabled => true).all
+      @urls   = @project.urls.where(:parse => false, :skip => false)
+        .order(:created_at => :desc)
+        .paginate(:page => params[:page], :per_page => 50)            
+    when 'plugins'
+      @type   = 'plugins'
+      @fields = @project.fields.where(:enabled => true).all
+
+    else
+      @type = 'parsed'
+      @fields = @project.fields.where(:enabled => true).all
+      @urls   = @project.urls.where(:parse => true, :skip => false)
+        .order(:created_at => :desc)
+        .paginate(:page => params[:page], :per_page => 1)
+    end
   end
 
   # GET /projects/new
@@ -123,5 +145,4 @@ class ProjectsController < ApplicationController
         {:success => false, :error => e.message}
       end
     end
-
 end

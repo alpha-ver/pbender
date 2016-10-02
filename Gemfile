@@ -54,9 +54,20 @@ gem 'rubyXL'
 gem 'process_exists'
 gem 'web-console', '~> 2.0'
 
+<<<<<<< HEAD
 group :production do
   gem 'thin'
 end
+=======
+gem 'bootflat-rails'
+gem 'icheck-rails'
+gem 'bootstrap-slider-rails'
+gem "font-awesome-rails"
+gem 'htmlbeautifier'
+gem 'mail_form'
+gem 'simple_form'
+
+>>>>>>> dev
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

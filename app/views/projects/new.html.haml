@@ -2,7 +2,7 @@
   .col-lg-6.col-lg-offset-3
     .panel.panel-default
       .panel-body
-        %h1 Новый проект
+        %h1 Новый сайт
 
         = form_for @project do |f|
 
@@ -30,8 +30,4 @@
                                     :class       => "form-control",
                                     :value       => params[:project].nil? ? "" :params[:project][:url]
           .actions
-            = f.submit 'Сохранить', :class=> "btn btn-primary btn-xm btn-block"
-
-
-//= link_to 'Show', @project
-//= link_to 'Back', projects_path
+            = f.submit 'Сохранить', :class=> "btn btn-success btn-sm btn-block"

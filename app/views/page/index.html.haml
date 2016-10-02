@@ -1,2 +1,115 @@
-%h1 Page#index
-%p Find me in app/views/page/index.html.haml
+#carousel-index.carousel.slide{"data-ride" => "carousel"}
+  / Indicators
+  %ol.carousel-indicators
+    %li.active{"data-slide-to" => "0", "data-target" => "#carousel-index"}
+    %li{"data-slide-to" => "1", "data-target" => "#carousel-index"}
+    %li{"data-slide-to" => "2", "data-target" => "#carousel-index"}    
+  / Wrapper for slides
+  .carousel-inner{:role => "listbox"}
+    .item.active
+      %img{:alt => "Выбор интересующего вас контента", :src => "/assets/slide1.jpg"}/
+      .carousel-caption
+        %h3 Выбор только интересующего вас контента
+        %p 
+          Поиск контента с помошью Xpath или Regex, сегментирование определённых блоков с контентом. 
+          %br/
+          Вы можете создать любое колличество полей(правил для поиска интересующих данных).
+    .item
+      %img{:alt => "Сохранение результатов парсинга сайтов", :src => "/assets/slide2.jpg"}/
+      .carousel-caption
+        %h3 Сохранение результатов парсинга сайтов
+        %p 
+          Все результаты парсинга проекта хранятся в нашем "облаке" для последующей выгрузки,
+          %br/
+          пока сами не захотите удалить их. 
+    .item
+      %img{:alt => "Модульная структура выгрузки результатов", :src => "/assets/slide3.jpg"}/
+      .carousel-caption
+        %h3 Модульная структура выгрузки результатов 
+        %p 
+          Вы можете выгружать данные сразу в проект. Если вам требуется специфический плагин выгрузки, 
+          %br/
+          мы можем разработать специально для вас. Для этого 
+          =link_to 'обратитесь', page_contacts_path
+          к нашим специалистам.
+  / Controls
+  %a.left.carousel-control{"data-slide" => "prev", :href => "#carousel-index", :role => "button"}
+    %span.glyphicon.glyphicon-chevron-left{"aria-hidden" => "true"}
+    %span.sr-only Назад
+  %a.right.carousel-control{"data-slide" => "next", :href => "#carousel-index", :role => "button"}
+    %span.glyphicon.glyphicon-chevron-right{"aria-hidden" => "true"}
+    %span.sr-only Вперед
+
+.container.index
+  %h1 Автоматический парсер сайтов
+  .row
+    .col-md-12
+      .timeline
+        %dl
+          %dt
+            =fa_icon 'hourglass-start'
+            Старт
+          %dd.pos-right.clearfix
+            .circ
+            .time Шаг №1
+            .events
+              .pull-left
+                = fa_icon 'plus-square'
+              .events-body
+                %h4.events-heading Добавляем проект
+                %p Указываем url сайта и название. 
+
+          %dd.pos-left.clearfix
+            .circ
+            .time Шаг №2
+            .events
+              .pull-left
+                = fa_icon 'bars'
+              .events-body
+                %h4.events-heading Добавляем новые поля поиска
+                %p Используя Xpath или Regex, настраиваем правила на поиск интересующих вас данных. Если правило отрабатывает корректно включаем его. Повторяем эту операцию для других правил.
+          %dd.pos-right.clearfix
+            .circ
+            .time Шаг №3
+            .events
+              .pull-left
+                = fa_icon 'cogs'
+              .events-body
+                %h4.events-heading Настройка парсинга
+                %p Настраиваем правила сбора ссылок, вы можете исключить или включить ссылки по подстроке или ограничить парсинг одной страницей. Так же можно указать модуль выгрузки, в таком режим модуль будет обрабатывать результаты с каждым новым url.
+          //%dt Сохраняем
+          %dd.pos-left.clearfix
+            .circ
+            .time Шаг №4
+            .events
+              .pull-left
+                = fa_icon 'play'
+              .events-body
+                %h4.events-heading Запуск парсинга
+                %p Запускаем задачу и ждем результатов. Статус задачи можно посмотреть в проектах.
+          %dt 
+            =fa_icon 'hourglass-half'
+            Ожидаем
+          %dd.pos-right.clearfix
+            .circ
+            .time Шаг №5
+            .events
+              .pull-left
+                = fa_icon 'eye'
+              .events-body
+                %h4.events-heading Проверка результатов 
+                %p Просматриваем результаты парсинга. Провеяем работу, правил. На данном этапе вы можете выгрузить данные или настроить парсинг на постоянную работу.
+          %dt.finish
+            =fa_icon 'hourglass-end'
+            Финиш
+
+.container-fluid.full
+  .row-fluid
+    .col-md-12.manager
+      .title
+        %h2 Цените своё время?
+      .content
+        %p 
+          Если вам некогда разбираться в технических деталях проекта, интересует только конечный результат. Вы всегда можете обратиться к нашим специалистам, мы настроим парсинг сайта или сайтов под ваши требования.
+          
+        = render :partial => 'contacts/contact'

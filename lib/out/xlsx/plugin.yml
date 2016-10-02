@@ -1,0 +1,22 @@
+#info plugin
+name:
+  en: XSLX plugin out
+  ru: Модуль выгрузки XLSX
+description:
+  en: XLSX desc
+  ru: Модуль выгрузки данных в формат Microsoft Excel  
+email:  hav0k@me.com
+author: Alexey Vildyaev
+site:   http://hav0k.ru
+fa_icon:   file-excel-o
+file_dir: xlsx
+in:
+  live:     false
+  generate: true
+v: 1.0.0
+
+#Setting fields
+setting:
+  
+#Out fields
+fields:

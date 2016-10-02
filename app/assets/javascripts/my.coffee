@@ -66,7 +66,6 @@ get_params=(s, h) ->
     else
       "#{s[h]}".replace(/"/g, "'")
 
-
 selectpicker=() -> 
   $('.fieldOption_select').selectpicker ->
     style: 'btn-info'
@@ -87,49 +86,101 @@ panel_class=(v) ->
     else if v['enabled'] == true && v['ok'] == true
       'panel-success'
 
+generate_progress = ->
+  $.ajax
+    type: "POST"
+    url: '/api/get_generate_progress'
+    data: 
+      id: 1
+    success: (xhr) ->
+      if xhr['status'] == 'generate'
+        html = [
+          "<div class=\"progr\">",
+            "<i class=\"fa fa-spinner fa-spin fa-fw\"></i>",
+            "<span>",
+              xhr['progress'] + "%",
+            "</span>",
+          "</div>",
+          "<div class=\"text\">",
+            "Выгрузка проекта — ",
+            xhr['name']
+          "</div>"
+        ]
+      else if xhr['status'] == 'task_generate'
+        html = [
+          "<div class=\"progr\">",
+            "<i class=\"fa fa-spinner fa-spin fa-fw\"></i>",
+          "</div>",
+          "<div class=\"text\">",
+            "Подготовка к выгрузке проекта — ",
+            xhr['name']
+          "</div>"
+        ]
+      else if xhr['status'] == 'finish'
+        html = [
+          "<div class=\"progr\">",
+            "<a href=\"#{xhr['url']}\">"
+              "<i class=\"fa fa-download\"></i>",
+              " Скачать",
+            "</a>",
+          "</div>"
+        ]
+
+      if xhr['success']
+        $('#fixed-notice').html(html.join(''))
+        $('#fixed-notice').show()
+      else
+
+      return
+    complete: (xhr)->
+      if xhr.responseJSON['success']
+        setTimeout generate_progress, 5000   
+      return
+  return
+
 
 add_accordion_field=(v) ->
   c "add accordion field #{v['name']}", "event"
 
-  if v['setting']!=null
-    dow = get_checkbox(v['setting']['download'])
-  else
+  if v['setting'] != null || v['setting'] != undefined
     dow = ''
+  else
+    dow = get_checkbox(v['setting']['download'])
 
   html = [
     "<div class=\"panel #{panel_class(v)}\" id=\"panel_field_#{v['name']}\">",
-      "<div class=\"panel-heading\" role=\"tab\" id=\"heading_#{v['name']}\">",
+      "<div class=\"panel-heading\" id=\"heading_#{v['name']}\">",
         "<h4 class=\"panel-title\">",
-          "<a class=\"collapsed\" role=\"button\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#accordion_field_#{v['name']}\" aria-expanded=\"false\" aria-controls=\"accordion_field_#{v['name']}\">",
+          "<a data-toggle=\"collapse\" data-parent=\"#fields-accordion\" href=\"#accordion_field_#{v['name']}\">",
             "&nbsp;",
             v['name'],
           "</a>",
         "</h4>",
       "</div>",
-      "<div id=\"accordion_field_#{v['name']}\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"heading_#{name}\">",
+      "<div id=\"accordion_field_#{v['name']}\" class=\"panel-collapse collapse\">",
         "<div class=\"panel-body\">",
           "<div class=\"checkbox\">",
             "<label>",
-              "<input type=\"checkbox\" name=\"fieldOption_unique_#{v['name']}\" #{get_checkbox(v['unique'])}> Уникальный",
+              "<input type=\"checkbox\" name=\"fieldOption_unique_#{v['name']}\" #{get_checkbox(v['unique'])} class=\"icheck\" data-skin=\"square\" data-color=\"green\"> Уникальный",
             "</label>",
 
             "<label>",
-              "<input type=\"checkbox\" name=\"fieldOption_required_#{v['name']}\" #{get_checkbox(v['required'])}> Обязательный",
+              "<input type=\"checkbox\" name=\"fieldOption_required_#{v['name']}\" #{get_checkbox(v['required'])} class=\"icheck\" data-skin=\"square\" data-color=\"green\"> Обязательный",
             "</label>"
 
             "<label>",
-              "<input type=\"checkbox\" #{get_disabled(v['ok'])} name=\"fieldOption_enabled_#{v['name']}\" #{get_checkbox(v['enabled'])}> Включить",
+              "<input type=\"checkbox\" #{get_disabled(v['ok'])} name=\"fieldOption_enabled_#{v['name']}\" #{get_checkbox(v['enabled'])} class=\"icheck\" data-skin=\"square\" data-color=\"red\"> Включить",
             "</label>"
           "</div>",
 
-          "<div class=\"form-group\">", #has-success...
+          "<div class=\"form-group fg-xpath\">", #has-success...
             "<label class=\"control-label\" for=\"input_field_xpath_#{v['name']}\">",
               "&nbsp;",
             "</label>"
             "<div class=\"input-group\">",
               "<span class=\"input-group-addon\">Xpath</span>",
               "<input name=\"fieldOption_xpath_#{v['name']}\" type=\"text\" class=\"form-control\" id=\"input_field_xpath_#{v['name']}\" value=\"#{get_params(v['setting'], 'xpath')}\">",
-              "<select class=\"fieldOption_select show-tick\" name=\"fieldOption_otype_#{v['name']}\" data-width=\"95px\">",
+              "<select class=\"fieldOption_select show-tick\" name=\"fieldOption_otype_#{v['name']}\" data-width=\"140px\">",
                 "<optgroup label=\"Строка\">",
                   "<option value=\"text\">Текст</option>",
                   "<option value=\"html\">HTML</option>",
@@ -142,30 +193,31 @@ add_accordion_field=(v) ->
               "</select>",
             "</div>",
           "</div>"       
-          "<div id=\"fieldInput_attr_#{v['name']}\">",
+          "<div id=\"fieldInput_attr_#{v['name']}\" class=\"fg-attr\">",
           "</div>",
 
-          "<div class=\"form-group\">",           
+          "<div class=\"form-group fg-regex\">",           
             "<div class=\"input-group\">",
-              "<span class=\"input-group-addon\">Регулярка</span>",
+              "<span class=\"input-group-addon\">Regex</span>",
               "<input name=\"fieldOption_regex_#{v['name']}\" type=\"text\" class=\"form-control\" id=\"input_field_regex_#{v['name']}\" value=\"#{get_params(v['setting'], 'regex')}\">",
             "</div>",
           "</div>",
 
           "<div class=\"checkbox\">",
             "<label>",
-              "<input type=\"checkbox\" name=\"fieldOption_download_#{v['name']}\" #{dow}> Скачать",
+              "<input type=\"checkbox\" name=\"fieldOption_download_#{v['name']}\" #{dow} class=\"icheck\" data-skin=\"square\" data-color=\"green\"> Скачать",
             "</label>",
-
           "</div>",
 
-            
-          "<button type=\"button\" id=\"fieldOption_submit_#{v['name']}\" class=\"btn btn-success fieldOption_submit btn-sm btn-block\">",
-            "Сохранить / Проверить",
-          "</button>"
-          "<button type=\"button\" id=\"fieldOption_delete_#{v['name']}\" class=\"btn btn-danger fieldOption_delete btn-sm btn-block\">",
-            "Удалить",
-          "</button>"
+          "<div class=\"btn-group pull-right\">",
+            "<button type=\"button\" id=\"fieldOption_submit_#{v['name']}\" class=\"btn btn-success fieldOption_submit btn-sm\">",
+              "Сохранить / Проверить",
+            "</button>"
+            "<button type=\"button\" id=\"fieldOption_delete_#{v['name']}\" class=\"btn btn-danger fieldOption_delete btn-sm\">",
+              "Удалить",
+            "</button>"
+          "</div>",  
+
         "</div>",
       "</div>",
     "</div>"
@@ -180,7 +232,7 @@ add_accordion_field=(v) ->
       html = [
         "<div class=\"form-group\">",           
           "<div class=\"input-group\">",
-            "<span class=\"input-group-addon\">Атрибут</span>",
+            "<span class=\"input-group-addon\">Attr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>",
             "<input name=\"fieldOption_attr_#{v['name']}\" type=\"text\" class=\"form-control\" id=\"input_field_attr_#{v['name']}\" value=\"#{get_params(v['setting'], 'attr')}\">",
           "</div>",
         "</div>"
@@ -188,11 +240,51 @@ add_accordion_field=(v) ->
       $("#fieldInput_attr_#{v['name']}").html(html)
     else
       $("#fieldInput_attr_#{v['name']}").html('')
+
+#slider event
+slider_ed=(t) ->
+  console.log t 
+  checked = $(t).is(':checked')
+  if checked
+    $('#input_field_interval').slider("enable");
+  else
+    $('#input_field_interval').slider("disable");
+
+#icheck
+icheck = ->
+  if $('.icheck').length > 0
+    $('.icheck').each ->
+      $el = $(this)
+      skin = if $el.attr('data-skin') != undefined then '_' + $el.attr('data-skin') else 'square'
+      color = if $el.attr('data-color') != undefined then '-' + $el.attr('data-color') else 'green'
+      opt = 
+        checkboxClass: 'icheckbox' + skin + color
+        radioClass: 'iradio' + skin + color
+      $el.iCheck opt
+      return
+
+    $('.icheck').on 'ifToggled', (event) ->
+      slider_ed(this)
+
+  return
 #################################################
 
 $ -> 
   $(document).ready ->
     c 'document_ready', 'event'
+    icheck()
+    $('[data-toggle="tooltip"]').tooltip()
+
+    asw=$('#affix_sidebar').width()
+    $('#affix_sidebar').width(asw)
+
+    #$('#affix_sidebar').affix(
+    #  offset:
+    #    top: 153
+    #)
+
+    generate_progress()
+
     #autoloading AJAX
     if $("#project_def").val() == "edit"
       $('body').addClass('loading')
@@ -205,11 +297,19 @@ $ ->
             if xhr['fields'].length !=0
               $.each xhr['fields'], (i,v) ->
                 add_accordion_field(v)
+              #field_affix()
+              icheck()
             else
               #тут дизайн что нет не хуя
           else
             c "AJAX error /api/get_fields", "error"
             console.log xhr['fields']
+
+          if $("input#setting_only_path_field").val() == ""
+            $('#CbOnlyPath b').html("главной")
+          else
+            $('#CbOnlyPath b').html( $("input#setting_only_path_field").val() )
+            
           $('body').removeClass('loading')
         error: (xhr) ->
           c "AJAX error #{xhr['status']} /api/get_fields", "error"
@@ -257,7 +357,7 @@ $ ->
       if url != newurl
         c "🔗 #{this['hash']}", "event"
         $("#project_current_url").val(newurl)
-        $("h1.title_current_url > small > span").html(newurl)
+        $("h3.title_current_url > small").html(newurl)
         $("a.p_url_change[href='##{url}']").parent().removeClass('active')
         $(this).parent().addClass('active')
         ####ajax
@@ -315,6 +415,9 @@ $ ->
               add_accordion_field(
                 name:    xhr['params']['field_add'], 
                 add:     true )
+              #$('#fields-accordion').collapse()
+              #field_affix()
+              icheck()
             else
               $('.p_url_add_group').addClass('has-error')
               $('.p_url_add_group > label').html(xhr['message'])
@@ -348,9 +451,9 @@ $ ->
       value = $("select[name='#{this.name}']").find(":selected").val()
       if value == "attr" || value == "array_attr"
         html = [
-          "<div class=\"form-group\">",           
+          "<div class=\"form-group fg-attr\">",           
             "<div class=\"input-group\">",
-              "<span class=\"input-group-addon\">Атрибут</span>",
+              "<span class=\"input-group-addon\">Attr</span>",
               "<input name=\"fieldOption_attr_#{name}\" type=\"text\" class=\"form-control\" id=\"input_field_attr_#{name}\">",
             "</div>",
           "</div>"
@@ -476,6 +579,9 @@ $ ->
       c "Button submit #{this.id}", "event"
       $('body').addClass('loading')
       name = this.id.split("_")[2]
+
+
+
       ######
       $.ajax
         type: "POST"
@@ -496,7 +602,6 @@ $ ->
               only_path_field: $("input[name='setting\[only_path_field\]']").val()
               plugin:
                 id: $("select.OutPlugin_select").find(":selected").val()
-
 
         success: (xhr) ->
           clear_panel($("#PanelSettingOut"))         
@@ -545,3 +650,184 @@ $ ->
           c "AJAX error #{xhr['status']} /api/controll_task", "error"
           console.log xhr
           $('body').removeClass('loading')
+
+
+    #task interval
+    $('#modal').on 'show.bs.modal', (event) ->
+      button   = $(event.relatedTarget)
+      method   = button.data('method')
+      id       = button.data('id') 
+      enable   = button.data('tasking')          
+      if button.data('interval') == undefined
+        interval = 30
+      else
+        interval = button.data('interval') / 60
+      title    = button.data('title')      
+      c "modal event #{method}(id-#{id}, on-#{enable}, interval-#{interval}, title-#{title} )", "event"
+      $('#project_id').val(id)
+      html = [
+        "<input value=\"tasking\" name=\"project[status]\" id=\"project_status\" type=\"hidden\">",
+        "<label>",
+          "<input type=\"checkbox\" name=\"project[enabled]\" #{get_checkbox(enable)} class=\"icheck\" data-skin=\"square\" data-color=\"green\"> Включить",
+        "</label>"
+        "<div class=\"form-group fg-interval\">",           
+          "<input name=\"project[interval]\" type=\"text\" class=\"form-control\" id=\"input_field_interval\" value=\"#{interval}\" type=\"text\" data-provide=\"slider\" data-slider-min=\"30\" data-slider-max=\"1440\" data-slider-step=\"1\" data-slider-value=\"#{interval}\" data-slider-enabled=\"false\"/>" 
+        "</div>"
+      ].join('')
+
+      $(this).find('.modal-title').text "Планировщик задачи для — #{title}"
+      $(this).find('.modal-body').html(html)
+
+      $('#input_field_interval').slider formatter: (value) ->
+        if value < 60 
+          'Каждые ' + value + ' Минут'
+        else if value >= 60 && value < 1440
+          h = Math.floor(value / 60)
+          m = value % 60
+
+          if m == 0
+            mm = ""
+          else if m == 1
+            mm = "и #{m} минута"
+          else if m > 1 && m < 5
+            mm = "и #{m} минуты"
+          else 
+            mm = "и #{m} минут"
+
+          if h == 1
+            "Каждый час #{mm}"
+          else if h > 1 && h < 5 
+            "Каждые #{h} часа #{mm}"
+          else
+            "Каждые #{h} часов #{mm}"
+        else if value == 1440
+          'Каждые сутки'
+
+      icheck()
+      slider_ed("input[name='project\[enabled\]']")
+      return
+
+    $('#modal-project').submit (e) ->
+      c "Button submit #{this.id}", "event"
+      $(this).prop( "disabled", true )
+
+      ######
+      $.ajax
+        type: "POST"
+        url: '/api/controll_task'
+        data: $('#modal-project').serialize()
+        success: (xhr) ->
+          console.log xhr
+          if xhr['success']
+            id       = xhr['project']['id']
+            interval = xhr['project']['interval']
+            tasking  = xhr['project']['tasking']
+
+            if tasking
+              $("#trp_#{id} td.tasking").html("#{interval / 60} мин.")
+            else
+              $("#trp_#{id} td.tasking").html("Выкл.")
+
+            $("#tasking_#{id}").data("interval", interval)
+            $("#tasking_#{id}").data("tasking",  tasking)
+
+            $('#modal').modal('hide')
+            $(this).prop( "disabled", false )
+          else
+            
+          $('body').removeClass('loading')
+        error: (xhr) -> 
+          c "AJAX error #{xhr['status']} /api/controll_task", "error"
+          console.log xhr
+          $('body').removeClass('loading')
+      return false
+
+    #Plugin generate click settings
+    $(document.body).delegate '.ul-generate > .module', 'click', (event) ->
+      plugin = $(this).data('plugin')
+      c "Plugin generate click settings #{plugin}", "event"
+      $('body').addClass('loading')
+      url = "/api/get_generate_setting"
+
+      ######
+      $.ajax
+        type: "POST"
+        url: url
+        data: 
+          utf8: "✓"
+          _method: "post"
+          authenticity_token: $("input[name='authenticity_token']").val()
+          project:
+            id: $('#project_id').val()
+          plugin: plugin 
+        success: (xhr) ->
+
+          if xhr['success']
+            $('ul.ul-generate > li.active').removeClass('active')
+            $(this).addClass('active')
+            $('#plugin_out_form h4').html("Выбран модуль <small>#{xhr['plugin_info']['name']['ru']}</small>")
+            
+            if xhr['plugin_info']['setting'] == null
+              setting = "У данного модуля нет настроек."
+            else
+              setting = "TODO"
+
+            html = [
+              "<input value=\"#{plugin}\" name=\"plugin\" type=\"hidden\">",
+              "<div class=\"row\">",
+                "<div class=\"col-lg-9\">",
+                  setting,
+                "</div>",
+                "<div class=\"col-lg-3\">",
+                  "<button name=\"button\" type=\"submit\" class=\"btn btn-success btn-sm btn-block\" id=\"ButtonGenerate\">",
+                    "<span class=\"fa fa-download\"></span> ",
+                    "Выгрузить",
+                  "</button>",
+                "</div>",                
+              "</div>"
+            ].join('')
+
+            $('#plugin_out_form .for-ajax').html(html)
+            $('#plugin_out_form').removeClass('hide')
+          else
+
+          $('body').removeClass('loading')
+        error: (xhr) -> 
+          c "AJAX error #{xhr['status']} #{url}", "error"
+          console.log xhr
+          $('body').removeClass('loading')
+
+    #plugin generate form
+    $('#LiveOForm').submit (e) ->
+      c "Plugin generate form submit #{this.id}", "event"
+      $('body').addClass('loading')
+      url = "/api/add_task_generating"
+      $("#plugin_out_form .for-alert").html('')
+
+      ######
+      $.ajax
+        type: "POST"
+        url: url
+        data: $('#LiveOForm').serialize()
+        success: (xhr) ->
+          if xhr['success']
+            $("#plugin_out_form .for-alert").html([
+              "<div class=\"alert alert-success\" role=\"alert\">",
+                "Задача добавленна в очередь",
+              "</div>"
+            ].join(''))
+            generate_progress()         
+          else
+            $("#plugin_out_form .for-alert").html([
+              "<div class=\"alert alert-danger\" role=\"alert\">",
+                xhr['error']['message'],
+              "</div>"
+            ].join(''))
+
+          $('body').removeClass('loading')
+        error: (xhr) ->
+          c "AJAX error #{xhr['status']} #{url}", "error"
+          console.log xhr
+          $('body').removeClass('loading')
+      return false
+

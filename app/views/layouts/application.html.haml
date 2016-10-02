@@ -4,18 +4,24 @@
     %meta(charset="utf-8")
     %meta(http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1")
     %meta(name="viewport" content="width=device-width, initial-scale=1.0")
-    %title= content_for?(:title) ? yield(:title) : "Ap"
+    %title= content_for?(:title) ? yield(:title) : "Bender — автоматический парсинг сайтов"
     = csrf_meta_tags
     = stylesheet_link_tag "application", :media => "all"
-    = favicon_link_tag 'apple-touch-icon-144x144-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '144x144'
-    = favicon_link_tag 'apple-touch-icon-114x114-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '114x114'
-    = favicon_link_tag 'apple-touch-icon-72x72-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '72x72'
-    = favicon_link_tag 'apple-touch-icon-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png'
-    = favicon_link_tag 'favicon.ico', :rel => 'shortcut icon'
+    /= favicon_link_tag 'apple-touch-icon-144x144-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '144x144'
+    /= favicon_link_tag 'apple-touch-icon-114x114-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '114x114'
+    /= favicon_link_tag 'apple-touch-icon-72x72-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '72x72'
+    /= favicon_link_tag 'apple-touch-icon-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png'
+    
+    = favicon_link_tag 'favicon-32x32.png', :rel => 'icon', :size=>"32x32"
+    = favicon_link_tag 'favicon-96x96.png', :rel => 'icon', :size=>"96x96"
+    = favicon_link_tag 'favicon-16x16.png', :rel => 'icon', :size=>"16x16"
+
     = javascript_include_tag "application"
     / Le HTML5 shim, for IE6-8 support of HTML elements
     /[if lt IE 9]
       = javascript_include_tag "//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"
+    - if Rails.env.production?  
+      = render :partial => 'layouts/m'
 
 
   %body
@@ -26,15 +32,20 @@
           %span.icon-bar
           %span.icon-bar
         %a.navbar-brand(href="/")
-          =raw "<b>b</b>ender"
+          %img{:src=>'/assets/logo_top.png', :width=>"50px", :heigh=>"50px"}
+
+
+
         .navbar-collapse.collapse.navbar-responsive-collapse
           %ul.nav.navbar-nav 
             = active_link_to t('about'),     page_about_path,    :wrap_tag => :li
             = active_link_to t('manual'),    page_manual_path,   :wrap_tag => :li
-            = active_link_to t('plugins'),   page_plugins_path,  :wrap_tag => :li
-            = active_link_to t('support'),   page_support_path,  :wrap_tag => :li
-            = active_link_to t('projects'),  page_projects_path, :wrap_tag => :li           
-          
+            = active_link_to t('contacts'),    page_contacts_path,   :wrap_tag => :li            
+            //= active_link_to t('plugins'),   page_plugins_path,  :wrap_tag => :li
+            //= active_link_to t('support'),   page_support_path,  :wrap_tag => :li
+            //= active_link_to t('sample'),    page_sample_path,   :wrap_tag => :li
+
+
           %ul.nav.navbar-nav.navbar-right 
             %li.dropdown
               %a.dropdown-toggle{ :aria => { :expanded => "false", :haspopup => "true"}, 
@@ -49,31 +60,108 @@
               -if current_user
                 %ul.dropdown-menu
                   = active_link_to t('projects'), projects_path, :wrap_tag => :li
-                  = active_link_to t('plugin'),   plugins_path, :wrap_tag => :li 
-
+                  = active_link_to t('plugin'),   plugins_path,  :wrap_tag => :li 
+                  = active_link_to t('files'),    files_path,    :wrap_tag => :li
                   = active_link_to t('profile'),  edit_user_registration_path, :wrap_tag => :li 
-
+                   
               -else
                 .dropdown-menu{:style => "padding:17px;"}
                   = form_tag session_path(:user) do
-                    = text_field_tag 'user[email]', "", :placeholder => t("username")
+                    = text_field_tag 'user[email]', "", :placeholder => t("email")
                     = password_field_tag 'user[password]', "", :placeholder => t("password")
-                    = check_box_tag 'user[remember_me]'
-                    = label_tag 'user[remember_me]', t("remember_me")
-                    %button.btn.btn-primary 
+                    
+                    %label.remember_me
+                      = check_box_tag 'user[remember_me]', "", false, :class => "icheck", :data => {:skin=>"square", :color=>"green"}
+                      = t("remember_me")
+                    %button.btn.btn-xs.btn-success.btn-block 
                       =t('login')
 
 
 
 
-    .container
-      .row
-        .col-lg-12
+    .container-fluid.content
+      .row-fluid
+        .col-lg-12.full
           = flash_messages
           = yield
-      %footer
-        -if !current_user.blank? && current_user.admin? 
-          = console
+    
+    .container-fluid.footer
+      .row-fluid.fluid
+        .col-lg-12.full
+          .footer
+            .container
+              .clearfix
+                .footer-logo
+
+                  = active_link_to root_path, :active=>false do
+                    %img{:src=>'/assets/logo_full.png', :width=>"90px", :heigh=>"127px"}
+                    Bender
+
+                -if current_user
+                  %dl.footer-nav
+                    %dt.nav-title
+                      %span.glyphicon.glyphicon-user
+                      = current_user.email
+                    %dd.nav-item
+                      = active_link_to t('projects'), projects_path
+                    %dd.nav-item
+                      = active_link_to t('setting_plugin'), plugins_path
+                    %dd.nav-item
+                      = active_link_to t('files'), files_path    
+                    %dd.nav-item
+                      = active_link_to t('profile'),  edit_user_registration_path                  
+                    %dd.nav-item
+                      = link_to t('logout'),  destroy_user_session_path, :method=>:delete
+                -else
+                  %dl.footer-nav
+                    %dt.nav-title Пользователь
+                    %dd.nav-item
+                      = active_link_to t("sign_in", :default => "Sign in"), new_user_session_path
+                    %dd.nav-item
+                      = active_link_to t("sign_up", :default => "Sign up"), new_user_registration_path
+                    %dd.nav-item
+                      = active_link_to t("forgot_your_password", :default => "Forgot your password?"), new_user_password_path
+                    %dd.nav-item  
+                      = active_link_to t('didn_t_receive_confirmation_instructions', :default => "Didn't receive confirmation instructions?"), new_user_confirmation_path
+
+                %dl.footer-nav
+                  %dt.nav-title Возможности
+                  %dd.nav-item
+                    = active_link_to t('about'), page_about_path
+                  //%dd.nav-item
+                  //= active_link_to t('plugins'), page_plugins_path
+                  //%dd.nav-item
+                  //= active_link_to t('support'), page_support_path
+                %dl.footer-nav
+                  %dt.nav-title Помощь
+                  //%dd.nav-item
+                  //= active_link_to t('sample'), page_sample_path 
+                  %dd.nav-item
+                    = active_link_to t('manual'), page_manual_path 
+                %dl.footer-nav
+                  %dt.nav-title Обратная связь
+                  %dd.nav-item
+                    = active_link_to t('contacts'), page_contacts_path
+                  %dd.nav-item
+                    = active_link_to t('support_the_project'), page_support_the_project_path 
+
+              .footer-copyright.text-center  
+                Bender
+                %i
+                  beta
+                — автоматический парсинг сайтов
+                \| 
+                %a{:href=>"http://alphav.ru"} AlphaV 
+                © 2016 
+
+
+
+
+
+
+    -if !current_user.blank? && current_user.admin? 
+      = console
+    #fixed-notice
 
     #loader-wraper
       .loader

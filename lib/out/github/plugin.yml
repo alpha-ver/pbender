@@ -7,7 +7,10 @@ description:
   ru: Github desc        
 email:  hav0k@me.com
 author: Alexey Vildyaev
-site:   http://hav0k.ru
+site: http://hav0k.ru
+in:
+  live: true
+  generate: false 
 
 #Setting fields
 setting: 
@@ -97,3 +100,4 @@ fields:
       String
     request: false
     local_file: true
+
