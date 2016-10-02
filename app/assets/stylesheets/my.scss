@@ -75,8 +75,13 @@ body.loading #loader-wraper{
 }
 
 .panel { 
+
+
+
   .panel-heading{
-    border-radius:0px
+    border-radius:0px;
+    
+    border-top: 4px solid rgba(55,188,155,0.38);
   }
 
   .a:before{
@@ -169,6 +174,10 @@ body.loading #loader-wraper{
   margin: 10px;
 }
 
+#t-urls{
+  overflow: hidden;
+}
+
 .include-str{
   width:100%;
   span{
@@ -205,6 +214,13 @@ small{
 
 .navbar{
   border-bottom: solid 4px #48CFAD;
+  margin-bottom: 0px;
+
+  li.active{
+    border-top: solid 4px #434A54;
+    border-bottom: none
+
+  }
 }
 
 .navbar-brand{
@@ -217,7 +233,7 @@ small{
 }
 
   /*-- change navbar dropdown color --*/
-.navbar-nav > li > .dropdown-menu {
+  .navbar-nav > li > .dropdown-menu {
   background-color: #37BC9B;
   color:#fff;
 
@@ -231,7 +247,6 @@ small{
 
   li > a.active{
     background-color: #48CFAD;
-
     &:hover{
       background-color:#48CFAD;
       color: #fff;
@@ -246,9 +261,16 @@ small{
   }
 }
 
+
+//Container
 .content{
-  padding-bottom: 45px
+  padding: 0;
+  .full{
+    padding: 0;
+  }
 }
+
+
 
 .for-title{
   margin-top:44px
@@ -270,17 +292,14 @@ a:hover{
     text-transform: uppercase;
   }
 
+  a{
+    padding: 0 5px;
+  }
+
   a.active{
-    opacity: 0.5;
-    left: -20px;
-    position: relative;
-    
-    &:before{
-      position: relative;
-      content: "➡";
-      display: inline-block;
-      width: 20px;
-    }
+    opacity: 0.6;
+    border-top: 3px solid #fff;
+    background: rgba(255,255,255, 0.2);
 
     &:hover{
       color: #AAB2BD;
@@ -481,7 +500,7 @@ nav.paginate{
   }
 
 //fixed alert
- #fixed-notice{
+#fixed-notice{
   position: fixed;
   display: none;
   bottom: 0px;
@@ -491,37 +510,194 @@ nav.paginate{
   padding: 7px;
   border-top: solid 4px #48cfad;
 
-  &:hover{
+    &:hover{
+
+      .text{
+        display: inline-block;
+      }
+    }
+
+
+    .progr{
+      display: inline-block;
+      .span{
+        padding:5px
+      }
+
+    }
 
     .text{
-      display: inline-block;
+      display: none;
     }
-  }
+    
+    :hover{
 
-
-  .progr{
-    display: inline-block;
-    .span{
-      padding:5px
     }
 
-  }
 
-  .text{
-    display: none;
-  }
-  
-  :hover{
+    a{
+      color:  #fff;
+      &:hover{
+        color: #434A54;
+      }
+    }
+ }
 
-  }
 
+.carousel-caption {
+  left: 0%;
+  right: 0%;
+  bottom: 0%;
+  border-top: solid 4px rgba(55,188,155, 0.7);
+  padding: 0 13% 30px 13%;
+  @include long-shadow(text, #37BC9B, 130, false, false, left);
+
+  h3{
+  text-transform: uppercase;
+  margin-top: 3px;
+  opacity:1;
+  }
 
   a{
-    color:  #fff;
+    color: #434A54;
+    text-decoration: underline;
+
     &:hover{
-      color: #434A54;
+      color: #fff;
     }
+  }
+}
+
+.carousel-indicators{
+  bottom: 0px;
+
+
+
+  li{
+    background-color: #fff;
+  }
+
+  li.active{
+    background-color: #37BC9B;
+    border-color: #48CFAD;
+  }
+}
+
+.carousel-control{
+  width: 5%;
+
+  &.left, &.right{
+    background: none;
+    background-image: none;
+    color: #37BC9B;
+  
+    &:hover{
+      color: #48CFAD;
+    }
+
+  }
+}
+
+.timeline{
+
+  .circ{
+    background-color:rgb(55,188,155)!important;
+  }
+  .time{
+    color:rgb(55,188,155)!important;    
+  }
+  .pull-left{
+    color: rgb(55,188,155);
+    padding: 0 10px 0 10px;
+    font-size: 200%;
+  }
+
+  .finish{
+    margin-bottom: 0;
+  }
+}
+
+
+.index{
+  h1{
+    border-bottom: 3px solid rgb(170,178,189);
+    text-align: center;
+    margin-bottom: 0px;
+    padding-bottom: 2px;
+  }
+}
+
+
+.manager{
+  height: 600px;
+  width: 100%;
+  background: #333;
+  background: url('/assets/bg-clock.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  padding: 40px 15% 0 15%;
+
+  &.fix-background{
+    background: url('/assets/bg.jpg') no-repeat center center fixed;
   }
 
 
- }
+  p{
+    font-size: 125%;
+    color: #eee;
+    @include long-shadow(text, #434A54, 3, true, true, left);
+  }
+
+  .title{
+    overflow:hidden;
+    border-bottom: 3px solid #fff;
+
+    h2{
+      margin-bottom: 0px;
+      text-transform: uppercase;
+      text-align: center;
+      @include long-shadow(text, #434A54, 45, true, false, left);
+      opacity:0.64;
+      color: #fff;
+    }
+  }
+  
+  .content{
+    background-color: rgba(255,255,255, 0.2);
+    text-align: justify;
+    padding: 10px;
+    overflow: hidden;
+
+    .form-group{
+      width:100%;
+      padding-bottom: 25px;
+    }
+
+    textarea{
+      height: 150px;
+    }
+
+    label{
+      display: none;
+    }
+
+    span{
+      position: absolute;
+    }
+
+    .flash{
+      font-size: 130%;
+      @include long-shadow(text, #fff, 2, true, false, left);
+
+      .flash-error{
+        color: rgb(218,73,100);
+      }
+
+      .flash-notice{
+        color: #449d44;
+      }
+    }
+  }
+}

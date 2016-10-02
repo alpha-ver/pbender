@@ -1,11 +1,15 @@
-%h1 Список файлов
-- @pfs.each do |pf|
-  %h3= pf[:plugin][:name][I18n.locale]
-  %p= pf[:plugin][:description][I18n.locale]
-  %ul
-    - pf[:files].each do |file|
-      -path = file.gsub("#{Rails.root}/public", "")
-      %li
-        %a{:href=> path} 
-          =fa_icon pf[:plugin][:fa_icon]
-          =path.split('/')[-1]
+.container
+  .row
+    .col-lg-12
+
+      %h1 Список файлов
+      - @pfs.each do |pf|
+        %h3= pf[:plugin][:name][I18n.locale]
+        %p= pf[:plugin][:description][I18n.locale]
+        %ul
+          - pf[:files].each do |file|
+            -path = file.gsub("#{Rails.root}/public", "")
+            %li
+              %a{:href=> path} 
+                =fa_icon pf[:plugin][:fa_icon]
+                =path.split('/')[-1]

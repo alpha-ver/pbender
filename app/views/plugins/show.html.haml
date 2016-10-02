@@ -1,20 +1,25 @@
-%h1 Шаблон настройки модуля
+.container
+  .row
+    .col-lg-12
 
 
-%dl.dl-horizontal
-  %dt Название
-  %dd= @plugin.name
-  
-  %dt Модуль
-  %dd= eval(@plugin.class_name).info[:name][I18n.locale]
-
-  - @plugin.setting.each do |s|
-    %dt= s[0]
-    %dd= s[1]
+      %h1 Шаблон настройки модуля
 
 
+      %dl.dl-horizontal
+        %dt Название
+        %dd= @plugin.name
+        
+        %dt Модуль
+        %dd= eval(@plugin.class_name).info[:name][I18n.locale]
+
+        - @plugin.setting.each do |s|
+          %dt= s[0]
+          %dd= s[1]
 
 
-= link_to 'Edit', edit_plugin_path(@plugin)
-\|
-= link_to 'Back', plugins_path
+
+
+      = link_to 'Edit', edit_plugin_path(@plugin)
+      \|
+      = link_to 'Back', plugins_path

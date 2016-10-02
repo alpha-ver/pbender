@@ -1,0 +1,20 @@
+= simple_form_for @contact, :html => {:class => '' }, :remote=>true do |f|
+  .row
+    .col-md-6
+
+      = f.input :name, :placeholder => "Ваше имя", :class=>"form-control", wrapper_html: { class: "form-group-lg" }
+      = f.input :urls, :as => :text, :placeholder => "Список сайтов для парсинга", :class=>"form-control form-group-lg", wrapper_html: { class: "form-group-lg" }
+    .col-md-6
+
+      = f.input :email, :placeholder => "Ваша почта", :class=>"form-control form-group-lg", wrapper_html: { class: "form-group-lg" }
+      = f.input :message, :as => :text, :placeholder => "Краткое описание задачи", :class=>"form-control form-group-lg", wrapper_html: { class: "form-group-lg" }
+
+  .row
+    .col-md-9.flash
+      - flash.each do |key, value|
+        %div{:class=>"flash-#{key}"}
+          = value
+
+
+    .col-md-3
+      = f.button :submit, 'Отпрвить', :class=> "btn btn-block btn-success"

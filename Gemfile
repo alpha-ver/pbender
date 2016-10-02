@@ -51,11 +51,14 @@ gem 'rubyXL'
 gem 'process_exists'
 gem 'web-console', '~> 2.0'
 
-gem 'bootflat-rails', '~> 0.1.8'
+gem 'bootflat-rails'
 gem 'icheck-rails'
 gem 'bootstrap-slider-rails'
 gem "font-awesome-rails"
 gem 'htmlbeautifier'
+gem 'mail_form'
+gem 'simple_form'
+
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

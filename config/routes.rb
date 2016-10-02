@@ -11,6 +11,11 @@ Rails.application.routes.draw do
   get 'page/contacts'
   get 'page/test'
 
+  match '/contacts',     to: 'contacts#new',             via: 'get'
+  resources :contacts, only: [:new, :create]
+
+
+
   post   'api/add_field'
   post   'api/get_fields'
   post   'api/edit_field'

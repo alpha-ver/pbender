@@ -1,5 +1,6 @@
 class PageController < ApplicationController
   def index
+    @contact = Contact.new
   end
 
   def about
@@ -21,6 +22,7 @@ class PageController < ApplicationController
   end
 
   def contacts
+    @contact = Contact.new
   end
 
   def test

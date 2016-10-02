@@ -20,7 +20,8 @@
     / Le HTML5 shim, for IE6-8 support of HTML elements
     /[if lt IE 9]
       = javascript_include_tag "//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"
-
+    - if Rails.env.production?  
+      = render :partial => 'layouts/m'
 
 
   %body
@@ -39,9 +40,11 @@
           %ul.nav.navbar-nav 
             = active_link_to t('about'),     page_about_path,    :wrap_tag => :li
             = active_link_to t('manual'),    page_manual_path,   :wrap_tag => :li
-            = active_link_to t('plugins'),   page_plugins_path,  :wrap_tag => :li
-            = active_link_to t('support'),   page_support_path,  :wrap_tag => :li
-            = active_link_to t('sample'),    page_sample_path,   :wrap_tag => :li
+            = active_link_to t('contacts'),    page_contacts_path,   :wrap_tag => :li            
+            //= active_link_to t('plugins'),   page_plugins_path,  :wrap_tag => :li
+            //= active_link_to t('support'),   page_support_path,  :wrap_tag => :li
+            //= active_link_to t('sample'),    page_sample_path,   :wrap_tag => :li
+
 
           %ul.nav.navbar-nav.navbar-right 
             %li.dropdown
@@ -76,21 +79,21 @@
 
 
 
-    .container.content
-      .row
-        .col-lg-12
+    .container-fluid.content
+      .row-fluid
+        .col-lg-12.full
           = flash_messages
           = yield
     
-    .container
-      .row
-        .col-lg-12
+    .container-fluid.footer
+      .row-fluid.fluid
+        .col-lg-12.full
           .footer
             .container
               .clearfix
                 .footer-logo
 
-                  = active_link_to root_path do
+                  = active_link_to root_path, :active=>false do
                     %img{:src=>'/assets/logo_full.png', :width=>"90px", :heigh=>"127px"}
                     Bender
 
@@ -125,14 +128,14 @@
                   %dt.nav-title Возможности
                   %dd.nav-item
                     = active_link_to t('about'), page_about_path
-                  %dd.nav-item
-                    = active_link_to t('plugins'), page_plugins_path
-                  %dd.nav-item
-                    = active_link_to t('support'), page_support_path
+                  //%dd.nav-item
+                  //= active_link_to t('plugins'), page_plugins_path
+                  //%dd.nav-item
+                  //= active_link_to t('support'), page_support_path
                 %dl.footer-nav
                   %dt.nav-title Помощь
-                  %dd.nav-item
-                    = active_link_to t('sample'), page_sample_path 
+                  //%dd.nav-item
+                  //= active_link_to t('sample'), page_sample_path 
                   %dd.nav-item
                     = active_link_to t('manual'), page_manual_path 
                 %dl.footer-nav
@@ -158,8 +161,6 @@
 
     -if !current_user.blank? && current_user.admin? 
       = console
-
-
     #fixed-notice
 
     #loader-wraper
