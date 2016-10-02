@@ -271,11 +271,8 @@ class P
         path = dir_create + Digest::MD5.hexdigest(f) + '.' + uri.path.split('.')[-1]
         File.open(path, 'wb'){|sf| sf.write(f)}
         f = nil
-<<<<<<< HEAD
-        path
-=======
+
         path.gsub!("#{Rails.root}/public", '')
->>>>>>> dev
       rescue Exception => e
         e.message
       end

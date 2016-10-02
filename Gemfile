@@ -54,11 +54,10 @@ gem 'rubyXL'
 gem 'process_exists'
 gem 'web-console', '~> 2.0'
 
-<<<<<<< HEAD
 group :production do
   gem 'thin'
 end
-=======
+
 gem 'bootflat-rails'
 gem 'icheck-rails'
 gem 'bootstrap-slider-rails'
@@ -67,7 +66,7 @@ gem 'htmlbeautifier'
 gem 'mail_form'
 gem 'simple_form'
 
->>>>>>> dev
+
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -82,5 +81,6 @@ group :development do
   gem 'capistrano-rails-collection'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
+
 end
 
