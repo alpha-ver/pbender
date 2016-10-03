@@ -48,7 +48,8 @@ class OutGithub
 
     if !l['image'].blank? && l['image'][0][:setting][:download] == 'true'
       if !l['image'][1].blank? && !l['image'][1][:result_text].blank?
-        file = File.read(l['image'][1][:result_text])
+        prefix = "#{Rails.root}/public"
+        file = File.read(prefix + l['image'][1][:result_text])
         name = l['image'][1][:result_text].split("/")[-1]
         create("img/#{name}", file)
         image_tag = "<img src=\"/img/#{name}\">"
