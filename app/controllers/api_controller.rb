@@ -227,6 +227,7 @@ class ApiController < ApplicationController
     else
       if pg.status == 'stopping_generate'
         pg.status = 'finish'
+        pg.pid = nil
         pg.save
       end
       render :json => {:success => true, :status => pg.status, :progress => pg.progress, :name => pg.name, :url=> pg.result['plugin_file_url']}
