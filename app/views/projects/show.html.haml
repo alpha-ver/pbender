@@ -87,11 +87,12 @@
                       -else
                         -if field.otype == "text" || field.otype == "attr"
                           -if field.setting['download'] == "true" && !r.result_text.match( /[-_\w:]+\.(jpe?g|png|gif|svg)$/i ).nil?
-                            = Rails.root.to_s
-                            %img{:src => r.result_text, :width => '500px'}
+          
+                            -fix_url = r.result_text.split('/public')[-1]
+                            %img{:src => fix_url, :width => '500px'}
                             %br/
-                            %a{:href=>"https://pbender.ru#{r.result_text}"}
-                              = "https://pbender.ru#{r.result_text}"
+                            %a{:href=>"https://pbender.ru#{fix_url}"}
+                              = "https://pbender.ru#{fix_url}"
                           -else
                             = r.result_text
                         -elsif field.otype == "html"
