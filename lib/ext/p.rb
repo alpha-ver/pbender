@@ -272,7 +272,10 @@ class P
         File.open(path, 'wb'){|sf| sf.write(f)}
         f = nil
         puts Rails.root
-        
+
+
+
+    
         path.gsub!("#{Rails.root}/public", '')
 
         path

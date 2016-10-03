@@ -17,7 +17,7 @@
       -if @project.status == 'error' && !@project.result['exeption'].blank?
         .alert.alert-danger.alert-block
           %button.close{:type=>"button", :data=>{:dismiss=>"alert"}} ×
-          -if !current_user.admin
+          -if current_user.admin
             %h4= @project.result['exeption']
             %p
               %ul
@@ -87,7 +87,7 @@
                       -else
                         -if field.otype == "text" || field.otype == "attr"
                           -if field.setting['download'] == "true" && !r.result_text.match( /[-_\w:]+\.(jpe?g|png|gif|svg)$/i ).nil?
-                            %img{:src => r.result_text, :width => '500px'}
+                            %img{:src => r.result_text.gsub!("#{Rails.root}/public", ''), :width => '500px'}
                             %br/
                             %a{:href=>"https://pbender.ru#{r.result_text}"}
                               = "https://pbender.ru#{r.result_text}"
