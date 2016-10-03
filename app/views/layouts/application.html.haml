@@ -82,6 +82,7 @@
     .container-fluid.content
       .row-fluid
         .col-lg-12.full
+
           = flash_messages
           = yield
     
@@ -160,7 +161,7 @@
 
 
     -if !current_user.blank? && current_user.admin? 
-      = console
+      //= console
     #fixed-notice
 
     #loader-wraper

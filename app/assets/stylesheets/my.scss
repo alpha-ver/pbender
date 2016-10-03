@@ -30,6 +30,16 @@
 
 }
 
+.alert{
+  position: fixed;
+  width: 500px;
+  z-index: 1000;
+  bottom: 0;
+  left: 0;
+  margin-bottom: 0;
+  opacity: 0.95;
+}
+
 body.loading #loader-wraper{
   display: inherit;
 }
