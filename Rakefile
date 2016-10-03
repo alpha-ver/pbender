@@ -247,7 +247,7 @@ task :bender => :environment do
 
                   else
                     puts "Задача #{current_project.name} Завершенна.".colorize(:green)
-                    current_project.status = "end"
+                    current_project.status = "finish"
                     current_project.pid = nil
                     current_project.save
                     break
