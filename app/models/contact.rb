@@ -12,8 +12,9 @@ class Contact < MailForm::Base
       :subject            => "Обратная связь Bender",
       "X-Priority"        => "1 (Highest)",
       "X-MSMail-Priority" => "High",
-      :to                 => "form@pbender.ru",
-      :from               => %("#{name}" <#{email}>)
+      :to                 => "zahaz@alphav.ru",
+      :from               => "hello@pbender.ru",
+      :from_to            => %("#{name}" <#{email}>)
     }
   end
 end
