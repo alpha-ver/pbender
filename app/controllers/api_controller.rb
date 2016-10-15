@@ -161,13 +161,21 @@ class ApiController < ApplicationController
           @current_project.save
 
           fork_pid = fork do
-            sleep 3 # - fix save pids
+            sleep 0.1 # - fix save pids
             @current_project.status = 'generate'
             @current_project.save
 
             #инициализация плагина
+
+            if eval(pp).info[:setting].blank?
+              pa = nil
+            else
+              pa = Plugin.find_by(:class_name => pp, :test => true, :user_id => current_user.id)
+            end
+
+
             plugin = eval(pp).new(
-              nil, #cetting ;(
+              pa, #setting ;(
               @current_project.serializable_hash.deep_symbolize_keys, 
               #@current_project.fields.all.map {|i| i.serializable_hash.deep_symbolize_keys} -> github pff
               Hash[

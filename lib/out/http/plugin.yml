@@ -1,0 +1,65 @@
+#info plugin
+name:
+  en: http plugin add post
+  ru: http plugin add post
+description:
+  en: http plugin add post
+  ru: http plugin add post      
+email:  hav0k@me.com
+author: Alexey Vildyaev
+site: http://hav0k.ru
+in:
+  live: true
+  generate: true 
+
+#Setting fields
+setting: 
+  - type: InputField
+    name: url    
+    request: true
+    label:
+      ru: URL 
+      en: URL
+    placeholder:
+      ru: http://site.ru 
+      en: http://site.ru 
+
+  - type: PasswordField
+    name: key
+    request: true
+    label: 
+      ru: API key
+      en: API key  
+    placeholder:
+      ru: API key
+      en: API key
+      
+
+#Out fields
+fields:
+  - name: title
+    description: 
+      ru: Заголовок поста
+      en: Title post
+    types: 
+      String
+    request: true
+    local_file: false
+
+  - name: content
+    description: 
+      ru: Контент поста
+      en: Content post
+    types: 
+      String
+    request: true
+    local_file: false
+
+  - name: image
+    description: 
+      ru: Изображение
+      en: Image
+    types: 
+      String
+    request: false
+    local_file: true

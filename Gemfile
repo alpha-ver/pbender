@@ -65,6 +65,7 @@ gem "font-awesome-rails"
 gem 'htmlbeautifier'
 gem 'mail_form'
 gem 'simple_form'
+gem 'httparty'
 
 
 

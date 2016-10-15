@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :news
   ##static page
   root 'page#index'
   get 'page/about'
