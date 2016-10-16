@@ -1,10 +1,10 @@
 #info plugin
 name:
   en: http plugin add post
-  ru: http plugin add post
+  ru: Плагин выгрузки API(http)
 description:
   en: http plugin add post
-  ru: http plugin add post      
+  ru: Генерирует http запроссы, в зависимости от ваших данных.    
 email:  hav0k@me.com
 author: Alexey Vildyaev
 site: http://hav0k.ru

@@ -91,7 +91,7 @@ generate_progress = ->
     type: "POST"
     url: '/api/get_generate_progress'
     data: 
-      id: 1
+      id: $('input#project_id').val()
     success: (xhr) ->
       if xhr['status'] == 'generate'
         html = [
@@ -116,6 +116,15 @@ generate_progress = ->
             xhr['name']
           "</div>"
         ]
+
+      else if xhr['status'] == 'finish' && xhr['url'] == 'none'
+        html = [
+          "<div class=\"progr\">",
+            "<i class=\"fa fa-signed\"></i>",
+            " Готово",
+          "</div>"
+        ]
+
       else if xhr['status'] == 'finish'
         html = [
           "<div class=\"progr\">",
@@ -125,6 +134,8 @@ generate_progress = ->
             "</a>",
           "</div>"
         ]
+
+
 
       if xhr['success']
         $('#fixed-notice').html(html.join(''))
@@ -143,9 +154,10 @@ add_accordion_field=(v) ->
   c "add accordion field #{v['name']}", "event"
 
   if v['setting'] != null || v['setting'] != undefined
-    dow = ''
-  else
     dow = get_checkbox(v['setting']['download'])
+  else
+    dow = ''
+
 
   html = [
     "<div class=\"panel #{panel_class(v)}\" id=\"panel_field_#{v['name']}\">",

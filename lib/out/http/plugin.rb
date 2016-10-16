@@ -11,10 +11,11 @@ class OutHttp
     if pa.blank?
       raise OutHttpPA
     else
-      init_plugin(pa) #!
       @cp   = cp
       @cpfs = cpfs
-    end
+      @pa   = pa
+      @yml  = YAML.load_file("#{Rails.root}/lib/out/http/plugin.yml").deep_symbolize_keys
+    end    
   end
 
   def self.info
@@ -35,38 +36,64 @@ class OutHttp
     end
   end
 
-  #cu - current url hash
-  #rs - resutls hash
+  #url - current url hash
+  #result - resutls hash
+  def push_url(url, result) # <- live out
+    out = {}
+    result.each_with_index.map do |v,i|
+      field = @cpfs[ v[:field_id] ]
 
-  def push_url(cu, rs) # <- live out
-    time = Time.now
+      if !field[:setting].nil? && field[:setting][:download] == "true"
+        str = "https://pbender.ru" + v[:result_text]
+      else
+        str = v[:result_text]
+      end
 
-    l=Hash[
-      @cpfs.map{|i| 
-        [
-          i[:name], 
-          [i, rs.select{|ii| ii[:field_id] == i[:id]}[0] ]
-        ]
-      }
-    ]
-
-    body = HTTParty.post(
-      "#{setting_field('url')}", 
-      body: {
-        key: setting_field('key'),
-        data: l,
-        time: time
-      }
-    ).body
-
-    #result parse
-    json = JSON.parse(body)
-
-    if json['success'] == false
-      
-    else
-
+      case field[:otype]
+      when "text"
+        out[field[:name]] = str
+      when "html"
+        out[field[:name]] = str
+      when "attr"
+        out[field[:name]] = str
+      when "array"
+        out[field[:name]] = v[:result_arr ]
+      when "array_attr"
+        out[field[:name]] = v[:result_arr ]
+      else
+        #out << "-" 
+      end
     end
+
+    p out 
+
+    begin
+      body = HTTParty.post(
+        "#{setting_field('url')}", 
+        body: {
+          key:    setting_field('key'),
+          url:    url,
+          fields: out
+        }
+      ).body
+
+      json = JSON.parse(body)
+    rescue Exception => e
+      puts e.message.colorize(:red)
+      json = nil
+    end
+    
+    if json.nil?
+      
+    elsif !json.nil? && json['success'] == false
+      
+    elsif !json.nil? && json['success'] == true
+
+    else
+      #не может быть
+    end
+
+
 
   end
 
@@ -75,51 +102,22 @@ class OutHttp
     @count = count
     @num   = 0
 
-
+    p @cp[:id]
+    p @count
   end
 
   def generate(url, result)
     @num += 1
 
-    out = []
-
-    result.each_with_index.map do |v,i|
-      field = @cpfs[ v[:field_id] ]
-
-      case field[:otype]
-      when "text"
-
-        out << {:field => field, :result => v[:result_text]  }
-      when "html"
-        out << {:field => field, :result => v[:result_text]  }
-      when "attr"
-        out << {:field => field, :result => v[:result_text]  }
-      when "array"
-        out << {:field => field, :result => v[:result_arr]  }
-      when "array_attr"
-        out << {:field => field, :result => v[:result_arr]  }
-      else
-        #out << "-" 
-      end 
-
-    end
-
-    body = HTTParty.post(
-      "#{setting_field('url')}", 
-      body: {
-        key: setting_field('key'),
-        url: url,
-        out: out
-      }
-    ).body
-
+    sleep 0.3
+    push_url(url, result)
 
     progress = (( @num.to_f / @count ) * 100).to_i
     P.update_progress(@cp[:id], progress)    
   end
 
   def after_generate
-    {}
+    {:plugin_file_url =>  "none" }
   end
 
   def setting_field(name)
@@ -129,18 +127,6 @@ class OutHttp
   end
 
   private
-    def init_github 
-
-    end
-
-    def init_plugin(pa)
-      @pa  = pa
-      @yml = plugin_conf
-    end    
-
-    def plugin_conf
-      YAML.load_file("#{Rails.root}/lib/out/github/plugin.yml").deep_symbolize_keys
-    end
 
     def setting_field(name)
       if !@pa.setting.blank? && !@pa.setting[name].nil?

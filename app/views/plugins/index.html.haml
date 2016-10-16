@@ -20,17 +20,19 @@
 
         %tbody
           - @plugins.each do |plugin|
-            %tr{:class=> plugin.test ? 'success' : 'warning'}
-              %td
-                = link_to plugin do
-                  = plugin.name
+            -if class_exists?(plugin.class_name)
+              %tr{:class=> plugin.test ? 'success' : 'warning'}
+                %td
+                  = link_to plugin do
+                    = plugin.name
 
-              %td
-                - p = eval(plugin.class_name).info
-                = p[:name][I18n.locale]
+                %td
+                  
+                  - p = eval(plugin.class_name).info
+                  = p[:name][I18n.locale]
 
-              %td
-                = link_to edit_plugin_path(plugin), :class=> 'btn btn-xs btn-1' do
-                  %span.glyphicon.glyphicon-edit{"aria-hidden" => "true"}
-                = link_to plugin, :class=> 'btn btn-xs btn-1', :method => :delete, :data => { :confirm => 'Are you sure?' } do 
-                  %span.glyphicon.glyphicon-trash{"aria-hidden" => "true"}
+                %td
+                  = link_to edit_plugin_path(plugin), :class=> 'btn btn-xs btn-1' do
+                    %span.glyphicon.glyphicon-edit{"aria-hidden" => "true"}
+                  = link_to plugin, :class=> 'btn btn-xs btn-1', :method => :delete, :data => { :confirm => 'Are you sure?' } do 
+                    %span.glyphicon.glyphicon-trash{"aria-hidden" => "true"}

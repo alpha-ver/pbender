@@ -40,9 +40,9 @@ class P
     if p.nil?
       
     else
-      if progress == p.progress
+      if progress != p.progress
         p.progress = progress
-        p.save
+        p.save!
       end
     end
   end

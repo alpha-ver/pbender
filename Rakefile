@@ -73,7 +73,18 @@ def init_out(cp, cpfs)
       eval(plugin.class_name).new(
         plugin, 
         cp.serializable_hash.deep_symbolize_keys, 
-        cpfs.map {|i| i.serializable_hash.deep_symbolize_keys}
+        #cpfs.map {|i| i.serializable_hash.deep_symbolize_keys} -> github теперь переделать!
+        Hash[
+          cpfs.map {|i| 
+            [
+              i[:id], 
+              i.serializable_hash(:except=>:id).deep_symbolize_keys
+            ] 
+          }
+        ]
+
+
+
       )  
     else 
       nil
