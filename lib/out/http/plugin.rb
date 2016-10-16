@@ -27,7 +27,7 @@ class OutHttp
       o = open("#{setting_field('url')}?key=#{setting_field('key')}")
       if o.status[0]
         json = JSON.parse(o.read)
-        r json['success']
+        r json['success'], json['result'] 
       else
         r false
       end
@@ -65,8 +65,7 @@ class OutHttp
       end
     end
 
-    p out 
-
+    body = false
     begin
       body = HTTParty.post(
         "#{setting_field('url')}", 
@@ -80,16 +79,21 @@ class OutHttp
       json = JSON.parse(body)
     rescue Exception => e
       puts e.message.colorize(:red)
-      json = nil
+      if !body
+        body = 'Pre initialize HTTParty'
+      end
     end
+
+    #dev!
     
     if json.nil?
-      
+      puts body.colorize(:red)
     elsif !json.nil? && json['success'] == false
-      
+      puts json.to_json.colorize(:yellow)
     elsif !json.nil? && json['success'] == true
-
+      puts json.to_json.colorize(:green)
     else
+      puts json.to_json.colorize(:red)
       #не может быть
     end
 
@@ -101,9 +105,6 @@ class OutHttp
   def before_generate(count=nil)
     @count = count
     @num   = 0
-
-    p @cp[:id]
-    p @count
   end
 
   def generate(url, result)
