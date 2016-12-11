@@ -192,7 +192,7 @@ class P
       when 'text'
         ren=r[:result].text
       when 'html'
-        ren=r[:result].to_s
+        ren=r[:result].inner_html
         reh=h_formatter.format(lexer.lex(ren))
       when 'attr'
         ren=r[:result].attr(field[:setting]['attr']).to_s

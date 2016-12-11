@@ -150,14 +150,14 @@ generate_progress = ->
   return
 
 
+
 add_accordion_field=(v) ->
   c "add accordion field #{v['name']}", "event"
 
-  if v['setting'] != null || v['setting'] != undefined
+  if v['setting'] == null || v['setting'] == undefined
+    dow = "" 
+  else 
     dow = get_checkbox(v['setting']['download'])
-  else
-    dow = ''
-
 
   html = [
     "<div class=\"panel #{panel_class(v)}\" id=\"panel_field_#{v['name']}\">",

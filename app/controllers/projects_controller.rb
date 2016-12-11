@@ -5,7 +5,10 @@ class ProjectsController < ApplicationController
   # GET /projects
   # GET /projects.json
   def index
-    @projects = current_user.projects.order(:group)
+    @projects = current_user.projects.where(:template => false).order(:group)
+    if current_user.admin
+      @projects = current_user.projects.order(:template, :group)
+    end
   end
 
   # GET /projects/1
