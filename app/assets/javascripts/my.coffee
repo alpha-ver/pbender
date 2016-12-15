@@ -286,15 +286,6 @@ $ ->
     c 'document_ready', 'event'
     icheck()
     $('[data-toggle="tooltip"]').tooltip()
-
-    asw=$('#affix_sidebar').width()
-    $('#affix_sidebar').width(asw)
-
-    #$('#affix_sidebar').affix(
-    #  offset:
-    #    top: 153
-    #)
-
     generate_progress()
 
     #autoloading AJAX

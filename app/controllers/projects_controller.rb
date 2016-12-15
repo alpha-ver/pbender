@@ -57,7 +57,15 @@ class ProjectsController < ApplicationController
                               @project.status == "finish" || 
                               @project.status == "error"  ||
                               @project.status == "stop")
-        render :edit_parsing
+        if params[:option] == 'clear'
+          @project.fields.each{|i| i.results.delete_all }
+          @project.urls.each{|i| i.delete }
+
+          flash[:notice] = "Проект отчищен."
+          redirect_to :controller => :projects
+        else  
+          render :edit_parsing
+        end
       elsif @urls[:success] && (@project.status == "new_task"    || 
                                 @project.status == "update_task" || 
                                 @project.status == "runing"      ||

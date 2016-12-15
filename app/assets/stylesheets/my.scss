@@ -38,9 +38,19 @@
   left: 0;
   margin-bottom: 0;
   opacity: 0.95;
-  max-height: 250px;
+  max-height: 200px;
   overflow: hidden;
+  padding: 7px;
+  border-radius: 0;
+
+  .close{
+    top: -13px;
+    right: -7px;
+
+  }
 }
+
+
 
 body.loading #loader-wraper{
   display: inherit;
@@ -86,14 +96,41 @@ body.loading #loader-wraper{
   padding: 1px;   
 }
 
+#fields-accordion{
+  .collapse{
+    position: fixed;
+    border: 2px solid rgba(55,188,155, 0.98); 
+    border-top: 48px solid rgba(55,188,155, 0.98);   
+    height: 20px;
+    z-index: 9999;
+    overflow: hidden;
+    bottom: 0;
+
+    &:hover{
+      position: fixed;
+      height:100%;
+      background-color: #fff
+
+    }
+  }
+
+  a:before {
+      font-family: "Glyphicons Halflings";
+      content: "\e114";
+  }
+
+  /* Icon when the collapsible content is hidden */
+  a.collapsed:before {
+      content: "\e080";
+  }
+}
+
 .panel { 
-
-
 
   .panel-heading{
     border-radius:0px;
-    
     border-top: 4px solid rgba(55,188,155,0.38);
+
   }
 
   .a:before{

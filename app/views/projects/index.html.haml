@@ -20,7 +20,7 @@
             %th 
               %a{:href=>"#", :title=>"Все/Спарсенные/Пропущенные", :data=> {:toggle=>"tooltip", :placement=>"top"} }
                 Статистика
-            %th{:width => '68px'}
+            %th{:width => '102px'}
             %th{:width => '68px'}
 
         %tbody
@@ -68,8 +68,12 @@
               %td
                 = link_to edit_project_path(project), :class=> 'btn btn-xs btn-1' do 
                   %span.glyphicon.glyphicon-edit{"aria-hidden" => "true"}
-                = link_to project, :class=> 'btn btn-xs btn-1', :method => :delete, :data => { :confirm => 'Are you sure?' } do
+                = link_to project, :class=> 'btn btn-xs btn-1', :method => :delete, :data => { :confirm => 'Вы уверенны?' } do
                   %span.glyphicon.glyphicon-trash{"aria-hidden" => "true"}
+                = link_to edit_project_path(project, :option => "clear"), :class=> 'btn btn-xs btn-1', :data => { :confirm => 'Вы уверенны?' } do
+                  %i.fa.fa-eraser{"aria-hidden"=>"true"}
+
+
               %td
                 .controll_task
                   %button.btn.btn-1.btn-xs{:type => "button", :id=>"newtask_#{project.id}", :disabled=>false}
